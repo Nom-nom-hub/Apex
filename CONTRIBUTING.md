@@ -119,7 +119,7 @@ All pull requests are reviewed by maintainers before merging. The review process
 
 Join our community to connect with other contributors and users:
 
-- [Discord](https://discord.gg/apex-framework) - Real-time chat and support 
+- [Discord](https://discord.gg/apex-framework) - Real-time chat and support (coming soon)
 - [Twitter](https://twitter.com/apex_framework) - Announcements and updates (coming soon)
 - [Blog](https://apex.dev/blog) - In-depth articles and tutorials (coming soon)
 - [GitHub](https://github.com/Nom-nom-hub/Apex)
