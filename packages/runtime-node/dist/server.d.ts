@@ -9,4 +9,8 @@ export declare class DevServer {
     start(): Promise<void>;
     stop(): Promise<void>;
     private handleRequest;
+    private executeLoader;
+    private executeAction;
+    private extractParams;
+    private sendResponse;
 }

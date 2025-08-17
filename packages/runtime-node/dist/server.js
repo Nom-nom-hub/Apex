@@ -97,14 +97,43 @@ class DevServer {
         }
         // Scan routes on each request for development
         const routes = (0, core_1.scanRoutes)(this.options.routesDir);
+        const routeModules = (0, core_1.scanRouteModules)(routes);
         // Match route
-        const matchedRoute = (0, core_1.matchRoute)(routes, req.url);
-        if (!matchedRoute) {
+        const matchedRouteModule = routeModules.find(rm => (0, core_1.matchRoute)([rm.route], req.url || '') !== null);
+        if (!matchedRouteModule) {
             res.statusCode = 404;
             res.end('Not Found');
             return;
         }
+        const matchedRoute = matchedRouteModule.route;
         try {
+            // Handle POST requests with actions
+            if (req.method === 'POST' && matchedRouteModule.actionPath) {
+                const actionResult = await this.executeAction(matchedRouteModule.actionPath, req, matchedRoute);
+                await this.sendResponse(res, actionResult);
+                return;
+            }
+            // Handle GET requests with loaders
+            let loaderData = null;
+            if (req.method === 'GET' && matchedRouteModule.loaderPath) {
+                const loaderResult = await this.executeLoader(matchedRouteModule.loaderPath, req, matchedRoute);
+                if (loaderResult.status >= 300 && loaderResult.status < 400) {
+                    // Handle redirects
+                    await this.sendResponse(res, loaderResult);
+                    return;
+                }
+                if (typeof loaderResult.body === 'string') {
+                    try {
+                        loaderData = JSON.parse(loaderResult.body);
+                    }
+                    catch (e) {
+                        loaderData = loaderResult.body;
+                    }
+                }
+                else {
+                    loaderData = loaderResult.body;
+                }
+            }
             // Import the page component
             const pageModule = await Promise.resolve(`${matchedRoute.filePath}`).then(s => __importStar(require(s)));
             const PageComponent = pageModule.default;
@@ -113,8 +142,8 @@ class DevServer {
                 res.end('Page component not found');
                 return;
             }
-            // Render the page
-            const result = await (0, renderer_react_1.renderPage)(PageComponent);
+            // Render the page with loader data
+            const result = await (0, renderer_react_1.renderPage)(PageComponent, loaderData || {});
             // Send HTML response
             res.setHeader('Content-Type', 'text/html');
             res.end(`
@@ -130,9 +159,85 @@ class DevServer {
       `);
         }
         catch (error) {
-            console.error('Error rendering page:', error);
+            console.error('Error handling request:', error);
             res.statusCode = 500;
-            res.end('Error rendering page');
+            res.end('Error handling request');
+        }
+    }
+    async executeLoader(loaderPath, req, route) {
+        try {
+            const loaderModule = await Promise.resolve(`${loaderPath}`).then(s => __importStar(require(s)));
+            const loaderFunction = loaderModule.loader;
+            if (!loaderFunction) {
+                throw new Error(`No loader function exported from ${loaderPath}`);
+            }
+            const loaderArgs = {
+                request: req,
+                params: this.extractParams(route.path, req.url || ''),
+                context: {}
+            };
+            const result = await loaderFunction(loaderArgs);
+            return result;
+        }
+        catch (error) {
+            console.error('Error executing loader:', error);
+            return {
+                status: 500,
+                headers: {},
+                body: 'Error executing loader'
+            };
+        }
+    }
+    async executeAction(actionPath, req, route) {
+        try {
+            const actionModule = await Promise.resolve(`${actionPath}`).then(s => __importStar(require(s)));
+            const actionFunction = actionModule.action;
+            if (!actionFunction) {
+                throw new Error(`No action function exported from ${actionPath}`);
+            }
+            const actionArgs = {
+                request: req,
+                params: this.extractParams(route.path, req.url || ''),
+                context: {}
+            };
+            const result = await actionFunction(actionArgs);
+            return result;
+        }
+        catch (error) {
+            console.error('Error executing action:', error);
+            return {
+                status: 500,
+                headers: {},
+                body: 'Error executing action'
+            };
+        }
+    }
+    extractParams(routePath, url) {
+        // Simple parameter extraction
+        const params = {};
+        // Extract dynamic parameters from route path
+        const routeParts = routePath.split('/').filter(Boolean);
+        const urlParts = url.split('/').filter(Boolean);
+        for (let i = 0; i < routeParts.length; i++) {
+            if (routeParts[i].startsWith('[') && routeParts[i].endsWith(']')) {
+                const paramName = routeParts[i].slice(1, -1);
+                params[paramName] = urlParts[i] || '';
+            }
+        }
+        return params;
+    }
+    async sendResponse(res, response) {
+        res.statusCode = response.status;
+        // Set headers
+        Object.entries(response.headers).forEach(([key, value]) => {
+            res.setHeader(key, value);
+        });
+        // Send body
+        if (typeof response.body === 'string') {
+            res.end(response.body);
+        }
+        else {
+            res.end(JSON.stringify(response.body));
         }
     }
 }
