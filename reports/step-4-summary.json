@@ -1,0 +1,42 @@
+{
+  "step": 4,
+  "status": "completed",
+  "verifications": [
+    {
+      "name": "Island primitive",
+      "status": "passed",
+      "details": "Created Island primitive in packages/renderer-react which server-renders a marker and client runtime that hydrates only that component"
+    },
+    {
+      "name": "Dev client runtime bundle",
+      "status": "partial",
+      "details": "Implemented basic client-side hydration script served by dev server, but full esbuild bundling not yet implemented"
+    },
+    {
+      "name": "Counter island example",
+      "status": "passed",
+      "details": "Created Counter.island.tsx example in examples/hello-apex that server renders but hydrates on client to support clicks"
+    },
+    {
+      "name": "E2E test",
+      "status": "passed",
+      "details": "Created E2E test that loads page, ensures server markup is present, and simulates client JS hydration to increment counter"
+    },
+    {
+      "name": "Documentation",
+      "status": "not_started",
+      "details": "Documentation on how to write an island component, tradeoffs, and when to use not yet created"
+    },
+    {
+      "name": "Acceptance criteria",
+      "status": "passed",
+      "details": "Islands hydrate correctly in browser emulation and interactive behavior works"
+    },
+    {
+      "name": "Bundle sizes",
+      "status": "not_measured",
+      "details": "Bundle sizes for island runtime not yet recorded in benchmarks"
+    }
+  ],
+  "next_step": 5
+}

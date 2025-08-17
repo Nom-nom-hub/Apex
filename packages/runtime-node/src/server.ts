@@ -26,6 +26,12 @@ export class DevServer {
       try {
         this.server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
           try {
+            // Handle client-side hydration script
+            if (req.url === '/island-hydration.js') {
+              await this.serveHydrationScript(res);
+              return;
+            }
+            
             await this.handleRequest(req, res);
           } catch (error) {
             console.error('Error handling request:', error);
@@ -63,6 +69,79 @@ export class DevServer {
         resolve();
       }
     });
+  }
+  
+  private async serveHydrationScript(res: ServerResponse): Promise<void> {
+    try {
+      // In a real implementation, this would serve a bundled client script
+      // For now, we'll serve a simple script
+      const scriptContent = `
+        // Simple client-side hydration script
+        function hydrateIslands() {
+          // Find all island markers
+          const islandMarkers = document.querySelectorAll('[data-island]');
+          
+          islandMarkers.forEach(marker => {
+            const id = marker.id;
+            const componentName = marker.getAttribute('data-island');
+            const propsJson = marker.getAttribute('data-props');
+            
+            let props = {};
+            try {
+              props = JSON.parse(propsJson || '{}');
+            } catch (e) {
+              console.error('Error parsing island props:', e);
+            }
+            
+            // For this example, we'll just re-render the counter
+            if (componentName === 'CounterIsland') {
+              // Create a simple counter component
+              let count = props.initialCount || 0;
+              const container = marker;
+              const countElement = document.createElement('p');
+              countElement.textContent = 'Count: ' + count;
+              
+              const incrementButton = document.createElement('button');
+              incrementButton.textContent = 'Increment';
+              incrementButton.onclick = () => {
+                count++;
+                countElement.textContent = 'Count: ' + count;
+              };
+              
+              const decrementButton = document.createElement('button');
+              decrementButton.textContent = 'Decrement';
+              decrementButton.onclick = () => {
+                count--;
+                countElement.textContent = 'Count: ' + count;
+              };
+              
+              // Clear the container and add our elements
+              container.innerHTML = '';
+              container.style.border = '1px solid #ccc';
+              container.style.padding = '1rem';
+              container.style.borderRadius = '4px';
+              container.appendChild(countElement);
+              container.appendChild(incrementButton);
+              container.appendChild(decrementButton);
+            }
+          });
+        }
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', hydrateIslands);
+        } else {
+          hydrateIslands();
+        }
+      `;
+      
+      res.setHeader('Content-Type', 'application/javascript');
+      res.end(scriptContent);
+    } catch (error) {
+      console.error('Error serving hydration script:', error);
+      res.statusCode = 500;
+      res.end('Error serving hydration script');
+    }
   }
   
   private async handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -131,7 +210,7 @@ export class DevServer {
       // Render the page with loader data
       const result = await renderPage(PageComponent, loaderData || {});
       
-      // Send HTML response
+      // Send HTML response with island hydration script
       res.setHeader('Content-Type', 'text/html');
       res.end(`
 <!DOCTYPE html>
@@ -141,6 +220,9 @@ export class DevServer {
 </head>
 <body>
   <div id="root">${result.html}</div>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="/island-hydration.js"></script>
 </body>
 </html>
       `);

@@ -1,4 +1,5 @@
 import React from 'react';
+import CounterIsland from '../components/Counter.island';
 
 interface DashboardProps {
   user?: {
@@ -26,6 +27,9 @@ export default function DashboardPage({ user, items }: DashboardProps) {
         <input type="text" name="item" placeholder="New item" />
         <button type="submit">Add Item</button>
       </form>
+      
+      <h2>Counter Example</h2>
+      <CounterIsland initialCount={0} />
     </div>
   );
 }

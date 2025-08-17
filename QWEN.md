@@ -326,4 +326,36 @@ Always include why and how in the remediation notes.
 
 Output format for each step (strict)
 
-At the end of each step the agent must output a JSON summary to stdout (and commit it to /reports/step-N-summary.json) with the following structure:
+At the end of each step the agent must output a JSON summary to stdout (and commit it to /reports/step-N-summary.json) 
+
+
+📂 Apex Repo Structure
+
+apex/
+│── .github/                # GitHub workflows (CI/CD, issue templates, PR templates)
+│── docs/                   # Full documentation (guides, API references, architecture)
+│── examples/               # Example apps showcasing Apex in action
+│── packages/               # Core framework broken into modular packages
+│   ├── apex-core/          # Core runtime (routing, lifecycle, dependency injection)
+│   ├── apex-cli/           # CLI tool for scaffolding, dev server, builds
+│   ├── apex-server/        # Server engine (HTTP, WebSocket, RPC)
+│   ├── apex-client/        # Frontend runtime (React/Vue/Svelte adapters)
+│   ├── apex-db/            # Database layer (ORM, query builder, migrations)
+│   ├── apex-auth/          # Authentication & authorization module
+│   ├── apex-ai/            # AI/ML utilities (built-in inference, LLM adapters)
+│   ├── apex-ui/            # UI components / design system
+│   └── apex-utils/         # Shared utilities (logging, error handling, etc.)
+│
+│── scripts/                # Automation scripts (build, release, deploy)
+│── tests/                  # Global integration tests & benchmarks
+│── website/                # Apex landing site & documentation portal
+│── .editorconfig           # Editor settings
+│── .eslintrc.js            # Linting rules
+│── .prettierrc             # Code formatting rules
+│── package.json            # Monorepo dependency management
+│── turbo.json / nx.json    # Monorepo orchestrator (Turborepo or Nx)
+│── tsconfig.base.json      # Base TypeScript config
+│── CONTRIBUTING.md         # Contribution guide
+│── ROADMAP.md              # Vision & roadmap
+│── LICENSE                 # License
+│── README.md               # Main project overview

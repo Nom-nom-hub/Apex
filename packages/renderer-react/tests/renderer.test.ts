@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
-import { renderPage } from '../src';
+import { renderPage } from '../src/renderer';
 
 describe('Renderer React', () => {
   it('should render a simple component', async () => {
