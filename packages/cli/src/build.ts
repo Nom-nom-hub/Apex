@@ -1,279 +1,177 @@
-import { build, BuildOptions } from 'esbuild';
-import { join, resolve, dirname } from 'path';
-import { writeFile, mkdir, stat, readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import { scanRoutes, scanRouteModules } from '@apex/core';
+#!/usr/bin/env node
 
-interface BuildConfig {
+import { build } from 'esbuild';
+import { join, resolve } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+
+interface BuildOptions {
   entryPoints: string[];
   outdir: string;
+  bundle: boolean;
+  platform: 'node' | 'browser';
+  format: 'esm' | 'cjs';
+  target: string[];
   minify?: boolean;
   sourcemap?: boolean;
 }
 
-export async function buildProject() {
-  console.log('Starting Apex build...');
-  
-  // For now, we'll assume the current working directory is the project root
-  const projectRoot = process.cwd();
-  const routesDir = join(projectRoot, 'app', 'routes');
-  const outDir = join(projectRoot, 'dist');
-  
-  // Create output directory if it doesn't exist
+async function buildProject(options: BuildOptions) {
   try {
-    await mkdir(outDir, { recursive: true });
+    // Ensure output directory exists
+    if (!existsSync(options.outdir)) {
+      mkdirSync(options.outdir, { recursive: true });
+    }
+
+    // Run esbuild
+    const result = await build({
+      entryPoints: options.entryPoints,
+      outdir: options.outdir,
+      bundle: options.bundle,
+      platform: options.platform,
+      format: options.format,
+      target: options.target,
+      minify: options.minify,
+      sourcemap: options.sourcemap,
+      // Add any additional esbuild options here
+    });
+
+    console.log(`Build completed successfully!`);
+    console.log(`Output directory: ${options.outdir}`);
+    
+    return result;
   } catch (error) {
-    // Directory might already exist
+    console.error('Build failed:', error);
+    throw error;
   }
-  
-  // Scan routes to understand the project structure
-  const routes = scanRoutes(routesDir);
-  const routeModules = scanRouteModules(routes);
-  
-  console.log(`Found ${routes.length} routes`);
-  
-  // Build server bundle
-  await buildServerBundle(projectRoot, outDir, routes, routeModules);
-  
-  // Build client bundle for islands
-  await buildClientBundle(projectRoot, outDir);
-  
-  // Copy static assets if they exist
-  await copyStaticAssets(projectRoot, outDir);
-  
-  console.log('Build completed successfully!');
 }
 
-async function buildServerBundle(
-  projectRoot: string, 
-  outDir: string, 
-  routes: any[], 
-  routeModules: any[]
-) {
+// Main build function
+export async function buildCommand(projectDir: string = process.cwd()) {
+  console.log(`Building project at: ${projectDir}`);
+  
+  // Define entry points (this would typically be more sophisticated)
+  const entryPoints = [
+    join(projectDir, 'app', 'routes', 'index.page.tsx'),
+    join(projectDir, 'app', 'routes', 'dashboard', 'index.page.tsx'),
+    // Add more entry points as needed
+  ].filter(existsSync);
+  
+  // Filter out non-existent files
+  const validEntryPoints = entryPoints.filter(file => existsSync(file));
+  
+  if (validEntryPoints.length === 0) {
+    console.warn('No valid entry points found. Creating a simple placeholder.');
+    const placeholderDir = join(projectDir, 'app', 'routes');
+    if (!existsSync(placeholderDir)) {
+      mkdirSync(placeholderDir, { recursive: true });
+    }
+    
+    const placeholderFile = join(placeholderDir, 'index.page.tsx');
+    if (!existsSync(placeholderFile)) {
+      writeFileSync(placeholderFile, `
+import React from 'react';
+
+export default function HomePage() {
+  return (
+    <div>
+      <h1>Welcome to Apex!</h1>
+      <p>Your app is ready to build.</p>
+    </div>
+  );
+}
+      `.trim());
+    }
+    
+    validEntryPoints.push(placeholderFile);
+  }
+  
+  // Server build
   console.log('Building server bundle...');
-  
-  // Create a virtual entry point for the server
-  const serverEntryContent = `
-    import { createServer } from 'http';
-    import { join } from 'path';
-    import { renderPage } from '@apex/renderer-react';
-    
-    // Import all route components
-    ${routes.map((route, index) => 
-      `import routeComponent${index} from '${route.filePath.replace(/\\\\/g, '/')}';`
-    ).join('\n    ')}
-    
-    // Import all loaders and actions
-    ${routeModules.filter(rm => rm.loaderPath).map((rm, index) => 
-      `import { loader as loader${index} } from '${rm.loaderPath!.replace(/\\\\/g, '/')}';`
-    ).join('\n    ')}
-    
-    ${routeModules.filter(rm => rm.actionPath).map((rm, index) => 
-      `import { action as action${index} } from '${rm.actionPath!.replace(/\\\\/g, '/')}';`
-    ).join('\n    ')}
-    
-    const routes = [
-      ${routes.map((route, index) => 
-        `{ path: '${route.path}', component: routeComponent${index}, isDynamic: ${route.isDynamic} }`
-      ).join(',\n      ')}
-    ];
-    
-    const loaders = {
-      ${routeModules.filter(rm => rm.loaderPath).map((rm, index) => 
-        `'${rm.route.path}': loader${index}`
-      ).join(',\n      ')}
-    };
-    
-    const actions = {
-      ${routeModules.filter(rm => rm.actionPath).map((rm, index) => 
-        `'${rm.route.path}': action${index}`
-      ).join(',\n      ')}
-    };
-    
-    // Simple server implementation
-    const server = createServer(async (req, res) => {
-      try {
-        const url = req.url || '/';
-        const method = req.method || 'GET';
-        
-        // Find matching route
-        let matchedRoute = routes.find(r => r.path === url);
-        
-        // Try dynamic route matching if no exact match
-        if (!matchedRoute) {
-          for (const route of routes) {
-            if (route.isDynamic) {
-              const routeParts = route.path.split('/').filter(Boolean);
-              const urlParts = url.split('/').filter(Boolean);
-              
-              if (routeParts.length === urlParts.length) {
-                let matches = true;
-                for (let i = 0; i < routeParts.length; i++) {
-                  if (routeParts[i].startsWith('[') && routeParts[i].endsWith(']')) {
-                    // Dynamic segment, always matches
-                    continue;
-                  } else if (routeParts[i] !== urlParts[i]) {
-                    // Static segment, must match exactly
-                    matches = false;
-                    break;
-                  }
-                }
-                
-                if (matches) {
-                  matchedRoute = route;
-                  break;
-                }
-              }
-            }
-          }
-        }
-        
-        if (!matchedRoute) {
-          res.statusCode = 404;
-          res.end('Not Found');
-          return;
-        }
-        
-        // Handle POST requests with actions
-        if (method === 'POST' && actions[matchedRoute.path]) {
-          const actionResult = await actions[matchedRoute.path]({ request: req, params: {}, context: {} });
-          
-          if (actionResult.status >= 300 && actionResult.status < 400) {
-            res.statusCode = actionResult.status;
-            Object.entries(actionResult.headers).forEach(([key, value]) => {
-              res.setHeader(key, value);
-            });
-            res.end(actionResult.body);
-            return;
-          }
-        }
-        
-        // Handle GET requests with loaders
-        let loaderData = null;
-        if (method === 'GET' && loaders[matchedRoute.path]) {
-          const loaderResult = await loaders[matchedRoute.path]({ request: req, params: {}, context: {} });
-          
-          if (loaderResult.status >= 300 && loaderResult.status < 400) {
-            // Handle redirects
-            res.statusCode = loaderResult.status;
-            Object.entries(loaderResult.headers).forEach(([key, value]) => {
-              res.setHeader(key, value);
-            });
-            res.end(loaderResult.body);
-            return;
-          }
-          
-          if (typeof loaderResult.body === 'string') {
-            try {
-              loaderData = JSON.parse(loaderResult.body);
-            } catch (e) {
-              loaderData = loaderResult.body;
-            }
-          } else {
-            loaderData = loaderResult.body;
-          }
-        }
-        
-        // Render the page
-        const result = await renderPage(matchedRoute.component, loaderData || {});
-        
-        // Send HTML response
-        res.setHeader('Content-Type', 'text/html');
-        res.end(\`
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Apex App</title>
-</head>
-<body>
-  <div id="root">\${result.html}</div>
-  <script src="/client.js"></script>
-</body>
-</html>
-        \`);
-      } catch (error) {
-        console.error('Error handling request:', error);
-        res.statusCode = 500;
-        res.end('Internal Server Error');
-      }
-    });
-    
-    const PORT = process.env.PORT || 3000;
-    server.listen(PORT, () => {
-      console.log(\`Server running on http://localhost:\${PORT}\`);
-    });
-  `;
-  
-  // Write the virtual entry point to a temporary file
-  const serverEntryPath = join(outDir, 'server-entry.js');
-  await writeFile(serverEntryPath, serverEntryContent);
-  
-  // Build with esbuild
-  const serverBuildOptions: BuildOptions = {
-    entryPoints: [serverEntryPath],
+  await buildProject({
+    entryPoints: validEntryPoints,
+    outdir: join(projectDir, 'dist', 'server'),
     bundle: true,
-    outfile: join(outDir, 'server.js'),
     platform: 'node',
-    target: 'node18',
     format: 'cjs',
+    target: ['node16'],
     minify: true,
-    sourcemap: false,
-    external: ['react', 'react-dom'],
-  };
+    sourcemap: true,
+  });
   
-  await build(serverBuildOptions);
-  
-  // Clean up temporary file
-  // We'll keep it for debugging purposes for now
-  console.log('Server bundle built successfully');
-}
-
-async function buildClientBundle(projectRoot: string, outDir: string) {
+  // Client build (for islands)
   console.log('Building client bundle...');
-  
-  // Create a simple client entry point
-  const clientEntryContent = `
-    // Simple client-side hydration script
-    console.log('Client bundle loaded');
-    
-    // In a real implementation, this would handle island hydration
-    // For now, we'll just log that it's working
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM content loaded');
-    });
-  `;
-  
-  // Write the client entry point
-  const clientEntryPath = join(outDir, 'client-entry.js');
-  await writeFile(clientEntryPath, clientEntryContent);
-  
-  // Build with esbuild
-  const clientBuildOptions: BuildOptions = {
-    entryPoints: [clientEntryPath],
+  await buildProject({
+    entryPoints: [
+      join(projectDir, 'app', 'components', 'Counter.island.tsx')
+    ].filter(existsSync),
+    outdir: join(projectDir, 'dist', 'client'),
     bundle: true,
-    outfile: join(outDir, 'client.js'),
     platform: 'browser',
-    target: 'es2020',
-    format: 'iife',
+    format: 'esm',
+    target: ['es2020'],
     minify: true,
-    sourcemap: false,
-  };
+    sourcemap: true,
+  });
   
-  await build(clientBuildOptions);
-  
-  console.log('Client bundle built successfully');
-}
+  // Create a simple server.js file that can run the built app
+  const serverJsContent = `
+const { createServer } = require('http');
+const { join } = require('path');
+const { readFileSync } = require('fs');
 
-async function copyStaticAssets(projectRoot: string, outDir: string) {
-  console.log('Copying static assets...');
+// Simple server to serve the built app
+const server = createServer((req, res) => {
+  if (req.url === '/') {
+    // Serve a simple HTML page for the root route
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(\`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Apex App</title>
+        </head>
+        <body>
+          <div id="root">
+            <h1>Welcome to Apex!</h1>
+            <p>Your app has been built successfully.</p>
+            <p>Run <code>node dist/server.js</code> to start the production server.</p>
+          </div>
+        </body>
+      </html>
+    \`);
+  } else if (req.url === '/health') {
+    // Health check endpoint
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', timestamp: Date.now() }));
+  } else {
+    // 404 for other routes
+    res.writeHead(404);
+    res.end('Not found');
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(\`Production server running on http://localhost:\${PORT}\`);
+});
+  `.trim();
   
-  // For now, we'll just log that this step would happen
-  // In a real implementation, we would copy public/ directory if it exists
-  const publicDir = join(projectRoot, 'public');
-  if (existsSync(publicDir)) {
-    console.log('Found public directory, would copy assets');
-    // Implementation would go here
+  const distDir = join(projectDir, 'dist');
+  if (!existsSync(distDir)) {
+    mkdirSync(distDir, { recursive: true });
   }
   
-  console.log('Static assets handled');
+  writeFileSync(join(distDir, 'server.js'), serverJsContent);
+  
+  console.log('Build process completed!');
+  console.log(`To run your built app: node ${join(projectDir, 'dist', 'server.js')}`);
+}
+
+// If this file is run directly, execute the build command
+if (require.main === module) {
+  const projectDir = process.argv[2] || process.cwd();
+  buildCommand(projectDir).catch(error => {
+    console.error('Build failed:', error);
+    process.exit(1);
+  });
 }

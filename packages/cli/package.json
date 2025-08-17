@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@apex/core": "workspace:*",
-    "@apex/runtime-node": "workspace:*"
+    "@apex/runtime-node": "workspace:*",
+    "esbuild": "^0.25.9"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

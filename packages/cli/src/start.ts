@@ -1,31 +1,61 @@
-import { createServer } from 'http';
-import { join } from 'path';
+#!/usr/bin/env node
 
-export async function startServer() {
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+import { join } from 'path';
+import { existsSync } from 'fs';
+import { spawn } from 'child_process';
+
+export async function startCommand(projectDir: string = process.cwd()) {
+  console.log(`Starting production server for project at: ${projectDir}`);
   
-  // In a real implementation, this would load the built server bundle
-  // For now, we'll just create a simple server that serves a static message
-  const server = createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.end(`
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Apex App</title>
-</head>
-<body>
-  <div id="root">
-    <h1>Hello from Apex Production Server!</h1>
-    <p>This is a placeholder for the built Apex application.</p>
-  </div>
-</body>
-</html>
-    `);
+  // Check if the built server exists
+  const serverPath = join(projectDir, 'dist', 'server.js');
+  if (!existsSync(serverPath)) {
+    console.error('Built server not found. Please run "apex build" first.');
+    process.exit(1);
+  }
+  
+  // Spawn the Node.js process to run the built server
+  const serverProcess = spawn('node', [serverPath], {
+    cwd: projectDir,
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      NODE_ENV: 'production'
+    }
   });
   
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+  // Handle process events
+  serverProcess.on('error', (error) => {
+    console.error('Failed to start production server:', error);
+    process.exit(1);
+  });
+  
+  serverProcess.on('exit', (code) => {
+    if (code !== null && code !== 0) {
+      console.error(`Production server exited with code ${code}`);
+      process.exit(code);
+    }
+  });
+  
+  // Handle graceful shutdown
+  process.on('SIGINT', () => {
+    console.log('Received SIGINT. Shutting down production server...');
+    serverProcess.kill('SIGINT');
+  });
+  
+  process.on('SIGTERM', () => {
+    console.log('Received SIGTERM. Shutting down production server...');
+    serverProcess.kill('SIGTERM');
+  });
+  
+  console.log(`Production server started. Visit http://localhost:3000 to view your app.`);
+}
+
+// If this file is run directly, execute the start command
+if (require.main === module) {
+  const projectDir = process.argv[2] || process.cwd();
+  startCommand(projectDir).catch(error => {
+    console.error('Failed to start production server:', error);
+    process.exit(1);
   });
 }

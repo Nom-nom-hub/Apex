@@ -17,7 +17,8 @@ if (command === 'dev') {
   // Import the build command dynamically
   import('../dist/build.js')
     .then(module => {
-      return module.buildProject();
+      const projectDir = args[1] || process.cwd();
+      return module.buildCommand(projectDir);
     })
     .catch(error => {
       console.error('Error building project:', error);
@@ -27,10 +28,11 @@ if (command === 'dev') {
   // Import the start command dynamically
   import('../dist/start.js')
     .then(module => {
-      return module.startServer();
+      const projectDir = args[1] || process.cwd();
+      return module.startCommand(projectDir);
     })
     .catch(error => {
-      console.error('Error starting server:', error);
+      console.error('Error starting production server:', error);
       process.exit(1);
     });
 } else if (command === 'create') {
@@ -48,7 +50,7 @@ if (command === 'dev') {
   console.log('Commands:');
   console.log('  create <name>  Create a new Apex project');
   console.log('  dev            Start the development server');
-  console.log('  build          Build the project for production');
-  console.log('  start          Start the production server');
+  console.log('  build [dir]    Build the project for production');
+  console.log('  start [dir]    Start the production server');
   process.exit(0);
 }
