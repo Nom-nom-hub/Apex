@@ -17,3 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./router"), exports);
 __exportStar(require("./route-types"), exports);
 __exportStar(require("./route-modules"), exports);
+__exportStar(require("./plugin-types"), exports);
+__exportStar(require("./plugin-loader"), exports);

@@ -156,7 +156,7 @@ export class DevServer {
     const routeModules = scanRouteModules(routes);
     
     // Match route
-    const matchedRouteModule = routeModules.find(rm => 
+    const matchedRouteModule = routeModules.find((rm: any) => 
       matchRoute([rm.route], req.url || '') !== null
     );
     
@@ -233,7 +233,7 @@ export class DevServer {
     }
   }
   
-  private async executeLoader(loaderPath: string, req: IncomingMessage, route: import("@apex/core").Route): Promise<Response> {
+  private async executeLoader(loaderPath: string, req: IncomingMessage, route: any): Promise<Response> {
     try {
       const loaderModule = await import(loaderPath);
       const loaderFunction = loaderModule.loader;
@@ -260,7 +260,7 @@ export class DevServer {
     }
   }
   
-  private async executeAction(actionPath: string, req: IncomingMessage, route: import("@apex/core").Route): Promise<Response> {
+  private async executeAction(actionPath: string, req: IncomingMessage, route: any): Promise<Response> {
     try {
       const actionModule = await import(actionPath);
       const actionFunction = actionModule.action;
@@ -310,7 +310,7 @@ export class DevServer {
     
     // Set headers
     Object.entries(response.headers).forEach(([key, value]) => {
-      res.setHeader(key, value);
+      res.setHeader(key, value as string | string[]);
     });
     
     // Send body

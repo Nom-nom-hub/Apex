@@ -13,6 +13,26 @@ if (command === 'dev') {
       console.error('Error starting dev server:', error);
       process.exit(1);
     });
+} else if (command === 'build') {
+  // Import the build command dynamically
+  import('../dist/build.js')
+    .then(module => {
+      return module.buildProject();
+    })
+    .catch(error => {
+      console.error('Error building project:', error);
+      process.exit(1);
+    });
+} else if (command === 'start') {
+  // Import the start command dynamically
+  import('../dist/start.js')
+    .then(module => {
+      return module.startServer();
+    })
+    .catch(error => {
+      console.error('Error starting server:', error);
+      process.exit(1);
+    });
 } else if (command === 'create') {
   const projectName = args[1];
   if (!projectName) {
@@ -28,5 +48,7 @@ if (command === 'dev') {
   console.log('Commands:');
   console.log('  create <name>  Create a new Apex project');
   console.log('  dev            Start the development server');
+  console.log('  build          Build the project for production');
+  console.log('  start          Start the production server');
   process.exit(0);
 }

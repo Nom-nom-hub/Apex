@@ -8,6 +8,7 @@ export declare class DevServer {
     constructor(options: DevServerOptions);
     start(): Promise<void>;
     stop(): Promise<void>;
+    private serveHydrationScript;
     private handleRequest;
     private executeLoader;
     private executeAction;
