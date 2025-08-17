@@ -17,10 +17,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apex/core": "workspace:*"
+    "@apex/core": "workspace:*",
+    "@apex/runtime-node": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "vitest": "^0.34.0"
+    "vitest": "^0.34.0",
+    "@types/node": "^18.0.0"
   }
 }

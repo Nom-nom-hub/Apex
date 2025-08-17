@@ -4,8 +4,15 @@ const args = process.argv.slice(2);
 const command = args[0];
 
 if (command === 'dev') {
-  console.log('Apex dev: running');
-  process.exit(0);
+  // Import the dev server dynamically
+  import('../dist/dev.js')
+    .then(module => {
+      return module.startDevServer();
+    })
+    .catch(error => {
+      console.error('Error starting dev server:', error);
+      process.exit(1);
+    });
 } else if (command === 'create') {
   const projectName = args[1];
   if (!projectName) {

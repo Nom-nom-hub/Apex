@@ -1,0 +1,24 @@
+{
+  "name": "@apex/runtime-node",
+  "version": "0.0.1",
+  "description": "Node.js runtime adapter for Apex framework",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@apex/core": "workspace:*",
+    "@apex/renderer-react": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^0.34.0",
+    "@types/node": "^18.0.0"
+  }
+}
