@@ -19,3 +19,4 @@ __exportStar(require("./route-types"), exports);
 __exportStar(require("./route-modules"), exports);
 __exportStar(require("./plugin-types"), exports);
 __exportStar(require("./plugin-loader"), exports);
+__exportStar(require("./cache"), exports);

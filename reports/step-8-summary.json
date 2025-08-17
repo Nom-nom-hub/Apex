@@ -1,0 +1,37 @@
+{
+  "step": 8,
+  "status": "completed",
+  "verifications": [
+    {
+      "name": "Cache API",
+      "status": "implemented",
+      "details": "Implemented cache API in packages/core available to loaders: cache.set(key, value, ttl) and cache.revalidate(path)"
+    },
+    {
+      "name": "Prerender support",
+      "status": "implemented",
+      "details": "Support export const prerender = { cache: { maxAge: 60 } } in route metadata"
+    },
+    {
+      "name": "Static export adapter",
+      "status": "implemented",
+      "details": "Implemented simple apex deploy --adapter=static to export static HTML files (with revalidation metadata)"
+    },
+    {
+      "name": "Examples",
+      "status": "implemented",
+      "details": "Created examples demonstrating ISR behavior and post-build static export in examples/hello-apex"
+    },
+    {
+      "name": "Tests",
+      "status": "implemented",
+      "details": "Created tests validating cache hits/misses and revalidate behavior"
+    },
+    {
+      "name": "Acceptance criteria",
+      "status": "met",
+      "details": "Cache primitives provide cache() and revalidate() functions, ISR implementation works for static pages, simple CDN/static hosting adapter implemented"
+    }
+  ],
+  "next_step": 9
+}

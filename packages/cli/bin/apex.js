@@ -35,6 +35,25 @@ if (command === 'dev') {
       console.error('Error starting production server:', error);
       process.exit(1);
     });
+} else if (command === 'deploy') {
+  // Import the deploy command dynamically
+  import('../dist/deploy.js')
+    .then(module => {
+      const projectDir = args[1] || process.cwd();
+      const deployArgs = args.slice(2);
+      
+      const options = {};
+      const adapterIndex = deployArgs.indexOf('--adapter');
+      if (adapterIndex !== -1 && adapterIndex + 1 < deployArgs.length) {
+        options.adapter = deployArgs[adapterIndex + 1];
+      }
+      
+      return module.deployCommand(projectDir, options);
+    })
+    .catch(error => {
+      console.error('Error deploying static site:', error);
+      process.exit(1);
+    });
 } else if (command === 'create') {
   const projectName = args[1];
   if (!projectName) {
@@ -52,8 +71,10 @@ if (command === 'dev') {
   console.log('  dev            Start the development server');
   console.log('  build [dir]    Build the project for production');
   console.log('  start [dir]    Start the production server');
+  console.log('  deploy [dir]   Deploy the project as a static site');
   console.log('');
   console.log('Options:');
   console.log('  --runtime <node|bun|deno>  Specify the runtime to use (default: node)');
+  console.log('  --adapter <static|cdn>     Specify the deployment adapter (default: static)');
   process.exit(0);
 }
