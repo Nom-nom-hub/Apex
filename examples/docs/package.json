@@ -1,0 +1,20 @@
+{
+  "name": "apex-docs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Documentation site for the Apex framework",
+  "scripts": {
+    "dev": "apex dev",
+    "build": "apex build",
+    "start": "apex start",
+    "deploy": "apex deploy"
+  },
+  "dependencies": {
+    "@apex/core": "workspace:*",
+    "@apex/cli": "workspace:*",
+    "@apex/runtime-node": "workspace:*",
+    "@apex/renderer-react": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

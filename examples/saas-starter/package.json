@@ -1,0 +1,20 @@
+{
+  "name": "saas-starter",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A SaaS starter example using the Apex framework",
+  "scripts": {
+    "dev": "apex dev",
+    "build": "apex build",
+    "start": "apex start",
+    "deploy": "apex deploy"
+  },
+  "dependencies": {
+    "@apex/core": "workspace:*",
+    "@apex/cli": "workspace:*",
+    "@apex/runtime-node": "workspace:*",
+    "@apex/renderer-react": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

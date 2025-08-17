@@ -1,0 +1,32 @@
+{
+  "step": 10,
+  "status": "completed",
+  "verifications": [
+    {
+      "name": "Example apps",
+      "status": "implemented",
+      "details": "Created three complete example apps: blog, ecommerce-starter, saas-starter in /examples"
+    },
+    {
+      "name": "Docs site",
+      "status": "implemented",
+      "details": "Completed docs/ site in examples/docs with guides: Getting Started, Loaders & Actions, Islands, Plugins, Deployments"
+    },
+    {
+      "name": "CI config",
+      "status": "implemented",
+      "details": "Added CI config (GitHub Actions) running tests, lint, and build"
+    },
+    {
+      "name": "Benchmarks",
+      "status": "implemented",
+      "details": "Created benchmarks/ with scripts and run results included"
+    },
+    {
+      "name": "Acceptance criteria",
+      "status": "met",
+      "details": "Three examples with README and tests. Docs site with navigation and search. Benchmarks and performance notes. CI pipeline config."
+    }
+  ],
+  "next_step": 11
+}
