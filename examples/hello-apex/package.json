@@ -1,0 +1,14 @@
+{
+  "name": "hello-apex",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "apex dev",
+    "build": "apex build",
+    "start": "apex start"
+  },
+  "dependencies": {
+    "@apex/core": "workspace:*",
+    "@apex/cli": "workspace:*"
+  }
+}
