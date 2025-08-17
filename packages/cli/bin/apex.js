@@ -52,5 +52,8 @@ if (command === 'dev') {
   console.log('  dev            Start the development server');
   console.log('  build [dir]    Build the project for production');
   console.log('  start [dir]    Start the production server');
+  console.log('');
+  console.log('Options:');
+  console.log('  --runtime <node|bun|deno>  Specify the runtime to use (default: node)');
   process.exit(0);
 }

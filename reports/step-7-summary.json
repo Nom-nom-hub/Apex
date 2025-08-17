@@ -1,0 +1,37 @@
+{
+  "step": 7,
+  "status": "completed",
+  "verifications": [
+    {
+      "name": "Runtime adapter packages",
+      "status": "implemented",
+      "details": "Created packages/runtime-bun and packages/runtime-deno with adapter shims (http server, file watcher)"
+    },
+    {
+      "name": "Runtime detection",
+      "status": "implemented",
+      "details": "Added runtime detection and a --runtime flag to apex dev and apex start"
+    },
+    {
+      "name": "Documentation",
+      "status": "implemented",
+      "details": "Created documentation showing how to run apex dev --runtime=bun and --runtime=deno"
+    },
+    {
+      "name": "Smoke tests",
+      "status": "implemented",
+      "details": "Created smoke tests ensuring server boots under Bun runtime (simulated in CI)"
+    },
+    {
+      "name": "Adapter examples",
+      "status": "implemented",
+      "details": "Created adapter examples and README files for both Bun and Deno adapters"
+    },
+    {
+      "name": "Acceptance criteria",
+      "status": "met",
+      "details": "Adapter code compiles and adapter interface tests pass. apex dev --runtime=node remains default and unaffected."
+    }
+  ],
+  "next_step": 8
+}
