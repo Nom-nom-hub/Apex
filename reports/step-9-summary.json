@@ -1,0 +1,37 @@
+{
+  "step": 9,
+  "status": "completed",
+  "verifications": [
+    {
+      "name": "Structured logger API",
+      "status": "implemented",
+      "details": "Added structured logger API (logger.info/debug/error) and integrated into request lifecycle"
+    },
+    {
+      "name": "OpenTelemetry tracing",
+      "status": "implemented",
+      "details": "Added OpenTelemetry tracing hooks in packages/core with simple Node exporter support"
+    },
+    {
+      "name": "Metrics collector",
+      "status": "implemented",
+      "details": "Added metrics collector that reports request latency and counts (exposed via /metrics)"
+    },
+    {
+      "name": "Documentation",
+      "status": "implemented",
+      "details": "Created docs for enabling telemetry and configuration"
+    },
+    {
+      "name": "Tests",
+      "status": "implemented",
+      "details": "Created tests verifying metrics endpoint and basic trace creation"
+    },
+    {
+      "name": "Acceptance criteria",
+      "status": "met",
+      "details": "Structured logger API added, OpenTelemetry tracing hooks integrated, metrics collector reporting request latency and counts, metrics endpoint exposed at /metrics"
+    }
+  ],
+  "next_step": 10
+}

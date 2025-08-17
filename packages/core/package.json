@@ -16,5 +16,12 @@
     "@types/node": "^18.19.123",
     "typescript": "^5.0.0",
     "vitest": "^0.34.0"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.203.0",
+    "@opentelemetry/resources": "^2.0.1",
+    "@opentelemetry/sdk-trace-node": "^2.0.1",
+    "@opentelemetry/semantic-conventions": "^1.36.0"
   }
 }

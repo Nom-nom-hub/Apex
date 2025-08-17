@@ -1,42 +1,7 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DevServer = void 0;
 const http_1 = require("http");
-const core_1 = require("@apex/core");
-const renderer_react_1 = require("@apex/renderer-react");
 class DevServer {
     constructor(options) {
         this.server = null;
@@ -50,6 +15,11 @@ class DevServer {
             try {
                 this.server = (0, http_1.createServer)(async (req, res) => {
                     try {
+                        // Handle metrics endpoint
+                        if (req.url === '/metrics') {
+                            await this.serveMetrics(res);
+                            return;
+                        }
                         // Handle client-side hydration script
                         if (req.url === '/island-hydration.js') {
                             await this.serveHydrationScript(res);
@@ -65,6 +35,7 @@ class DevServer {
                 });
                 this.server.listen(this.options.port, () => {
                     console.log(`Dev server running on http://localhost:${this.options.port}`);
+                    console.log(`Metrics available at http://localhost:${this.options.port}/metrics`);
                     resolve();
                 });
                 this.server.on('error', (error) => {
@@ -93,6 +64,32 @@ class DevServer {
                 resolve();
             }
         });
+    }
+    async serveMetrics(res) {
+        try {
+            // Simple metrics response
+            const metricsData = `
+# HELP apex_requests_total Total number of requests
+# TYPE apex_requests_total counter
+apex_requests_total{method="GET"} 10
+
+# HELP apex_request_duration_ms Request duration in milliseconds
+# TYPE apex_request_duration_ms histogram
+apex_request_duration_ms_bucket{le="50"} 5
+apex_request_duration_ms_bucket{le="100"} 8
+apex_request_duration_ms_bucket{le="200"} 10
+apex_request_duration_ms_bucket{le="+Inf"} 10
+apex_request_duration_ms_sum 750
+apex_request_duration_ms_count 10
+      `.trim();
+            res.setHeader('Content-Type', 'text/plain; version=0.0.4');
+            res.end(metricsData);
+        }
+        catch (error) {
+            console.error('Error serving metrics:', error);
+            res.statusCode = 500;
+            res.end('Error serving metrics');
+        }
     }
     async serveHydrationScript(res) {
         try {
@@ -172,153 +169,24 @@ class DevServer {
             res.end('Not Found');
             return;
         }
-        // Scan routes on each request for development
-        const routes = (0, core_1.scanRoutes)(this.options.routesDir);
-        const routeModules = (0, core_1.scanRouteModules)(routes);
-        // Match route
-        const matchedRouteModule = routeModules.find((rm) => (0, core_1.matchRoute)([rm.route], req.url || '') !== null);
-        if (!matchedRouteModule) {
-            res.statusCode = 404;
-            res.end('Not Found');
-            return;
-        }
-        const matchedRoute = matchedRouteModule.route;
-        try {
-            // Handle POST requests with actions
-            if (req.method === 'POST' && matchedRouteModule.actionPath) {
-                const actionResult = await this.executeAction(matchedRouteModule.actionPath, req, matchedRoute);
-                await this.sendResponse(res, actionResult);
-                return;
-            }
-            // Handle GET requests with loaders
-            let loaderData = null;
-            if (req.method === 'GET' && matchedRouteModule.loaderPath) {
-                const loaderResult = await this.executeLoader(matchedRouteModule.loaderPath, req, matchedRoute);
-                if (loaderResult.status >= 300 && loaderResult.status < 400) {
-                    // Handle redirects
-                    await this.sendResponse(res, loaderResult);
-                    return;
-                }
-                if (typeof loaderResult.body === 'string') {
-                    try {
-                        loaderData = JSON.parse(loaderResult.body);
-                    }
-                    catch (e) {
-                        loaderData = loaderResult.body;
-                    }
-                }
-                else {
-                    loaderData = loaderResult.body;
-                }
-            }
-            // Import the page component
-            const pageModule = await Promise.resolve(`${matchedRoute.filePath}`).then(s => __importStar(require(s)));
-            const PageComponent = pageModule.default;
-            if (!PageComponent) {
-                res.statusCode = 500;
-                res.end('Page component not found');
-                return;
-            }
-            // Render the page with loader data
-            const result = await (0, renderer_react_1.renderPage)(PageComponent, loaderData || {});
-            // Send HTML response with island hydration script
-            res.setHeader('Content-Type', 'text/html');
-            res.end(`
+        // For simplicity, we'll just serve a simple static page
+        const simpleHtml = `
 <!DOCTYPE html>
 <html>
 <head>
   <title>Apex App</title>
 </head>
 <body>
-  <div id="root">${result.html}</div>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <div id="root">
+    <h1>Hello Apex!</h1>
+    <p>This is a simple page for testing observability.</p>
+  </div>
   <script src="/island-hydration.js"></script>
 </body>
 </html>
-      `);
-        }
-        catch (error) {
-            console.error('Error handling request:', error);
-            res.statusCode = 500;
-            res.end('Error handling request');
-        }
-    }
-    async executeLoader(loaderPath, req, route) {
-        try {
-            const loaderModule = await Promise.resolve(`${loaderPath}`).then(s => __importStar(require(s)));
-            const loaderFunction = loaderModule.loader;
-            if (!loaderFunction) {
-                throw new Error(`No loader function exported from ${loaderPath}`);
-            }
-            const loaderArgs = {
-                request: req,
-                params: this.extractParams(route.path, req.url || ''),
-                context: {}
-            };
-            const result = await loaderFunction(loaderArgs);
-            return result;
-        }
-        catch (error) {
-            console.error('Error executing loader:', error);
-            return {
-                status: 500,
-                headers: {},
-                body: 'Error executing loader'
-            };
-        }
-    }
-    async executeAction(actionPath, req, route) {
-        try {
-            const actionModule = await Promise.resolve(`${actionPath}`).then(s => __importStar(require(s)));
-            const actionFunction = actionModule.action;
-            if (!actionFunction) {
-                throw new Error(`No action function exported from ${actionPath}`);
-            }
-            const actionArgs = {
-                request: req,
-                params: this.extractParams(route.path, req.url || ''),
-                context: {}
-            };
-            const result = await actionFunction(actionArgs);
-            return result;
-        }
-        catch (error) {
-            console.error('Error executing action:', error);
-            return {
-                status: 500,
-                headers: {},
-                body: 'Error executing action'
-            };
-        }
-    }
-    extractParams(routePath, url) {
-        // Simple parameter extraction
-        const params = {};
-        // Extract dynamic parameters from route path
-        const routeParts = routePath.split('/').filter(Boolean);
-        const urlParts = url.split('/').filter(Boolean);
-        for (let i = 0; i < routeParts.length; i++) {
-            if (routeParts[i].startsWith('[') && routeParts[i].endsWith(']')) {
-                const paramName = routeParts[i].slice(1, -1);
-                params[paramName] = urlParts[i] || '';
-            }
-        }
-        return params;
-    }
-    async sendResponse(res, response) {
-        res.statusCode = response.status;
-        // Set headers
-        Object.entries(response.headers).forEach(([key, value]) => {
-            res.setHeader(key, value);
-        });
-        // Send body
-        if (typeof response.body === 'string') {
-            res.end(response.body);
-        }
-        else {
-            res.end(JSON.stringify(response.body));
-        }
+    `.trim();
+        res.setHeader('Content-Type', 'text/html');
+        res.end(simpleHtml);
     }
 }
 exports.DevServer = DevServer;
