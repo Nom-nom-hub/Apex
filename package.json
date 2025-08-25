@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "echo \"No dev script yet\"",
     "build": "echo \"No build script yet\"",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
@@ -23,8 +24,11 @@
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
     "crypto-browserify": "^3.12.1",
     "esbuild": "^0.25.9",
+    "eslint": "^9.34.0",
     "typescript": "^5.0.0",
     "vitest": "^0.34.0"
   }
