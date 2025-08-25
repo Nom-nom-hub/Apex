@@ -4,6 +4,8 @@
 [![npm version](https://badge.fury.io/js/@apex%2Fcore.svg)](https://badge.fury.io/js/@apex%2Fcore)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<!-- Triggering CI workflow -->
+
 A modern web framework that combines the best of server-side rendering with client-side interactivity through islands architecture.
 
 ## Overview
