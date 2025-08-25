@@ -39,7 +39,9 @@ module.exports = [
       'node_modules/',
       'dist/',
       '.apex/',
-      'eslint.config.js'
+      'eslint.config.js',
+      'packages/*/dist/',
+      'packages/*/bin/'
     ]
   }
 ];
