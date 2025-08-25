@@ -60,9 +60,16 @@ if (command === 'dev') {
     console.error('Error: Please specify a project name');
     process.exit(1);
   }
-  console.log(`Creating new Apex project: ${projectName}`);
-  // In a real implementation, this would create the project files
-  process.exit(0);
+  
+  // Import the create command dynamically
+  import('../dist/create.js')
+    .then(module => {
+      return module.createCommand(projectName);
+    })
+    .catch(error => {
+      console.error('Error creating project:', error);
+      process.exit(1);
+    });
 } else {
   console.log('Apex CLI: hello');
   console.log('Usage: apex <command>');
