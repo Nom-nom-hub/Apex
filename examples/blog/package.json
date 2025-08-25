@@ -10,10 +10,10 @@
     "deploy": "apex deploy"
   },
   "dependencies": {
-    "@apex/core": "workspace:*",
-    "@apex/cli": "workspace:*",
-    "@apex/runtime-node": "workspace:*",
-    "@apex/renderer-react": "workspace:*",
+    "@apex-framework/core": "workspace:*",
+    "@apex-framework/cli": "workspace:*",
+    "@apex-framework/runtime-node": "workspace:*",
+    "@apex-framework/renderer-react": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

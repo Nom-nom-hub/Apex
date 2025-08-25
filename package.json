@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
-    "core": "link:packages/plugins/core",
     "jsonwebtoken": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
