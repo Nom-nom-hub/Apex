@@ -115,7 +115,7 @@ All pull requests are reviewed by maintainers before merging. The review process
 - Security implications
 - Adherence to project conventions
 
-## Community
+## Community Comming Soon...
 
 Join our community to connect with other contributors and users:
 
