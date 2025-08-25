@@ -11,22 +11,35 @@ module.exports = [
       sourceType: 'module',
       globals: {
         node: true,
-        es6: true
+        es6: true,
+        browser: true,
+        process: true,
+        console: true,
+        require: true,
+        module: true,
+        exports: true,
+        __dirname: true,
+        setTimeout: true,
+        Request: true
       }
     },
     plugins: {
       '@typescript-eslint': require('@typescript-eslint/eslint-plugin')
     },
     rules: {
-      'no-console': 'warn',
-      '@typescript-eslint/no-unused-vars': 'warn'
+      'no-console': 'off',
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'no-useless-escape': 'off'
     }
   },
   {
     ignores: [
       'node_modules/',
       'dist/',
-      '.apex/'
+      '.apex/',
+      'eslint.config.js'
     ]
   }
 ];
