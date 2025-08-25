@@ -24,7 +24,7 @@ export async function createCommand(projectName: string): Promise<void> {
     },
     dependencies: {
       '@apex-framework/core': '^0.0.2',
-      '@apex-framework/cli': '^0.0.2'
+      '@apex-framework/cli': '^0.0.3'
     }
   };
   

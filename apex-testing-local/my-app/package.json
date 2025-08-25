@@ -1,0 +1,14 @@
+{
+  "name": "my-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "apex dev",
+    "build": "apex build",
+    "start": "apex start"
+  },
+  "dependencies": {
+    "@apex-framework/core": "^0.0.2",
+    "@apex-framework/cli": "^0.0.2"
+  }
+}
