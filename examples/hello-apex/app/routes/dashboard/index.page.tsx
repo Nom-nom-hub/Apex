@@ -1,5 +1,5 @@
 import React from 'react';
-import CounterIsland from '../components/Counter.island';
+import CounterIsland from '../../components/Counter.island';
 
 interface DashboardProps {
   user?: {

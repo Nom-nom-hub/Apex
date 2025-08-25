@@ -8,6 +8,8 @@ export declare class DevServer {
     constructor(options: DevServerOptions);
     start(): Promise<void>;
     stop(): Promise<void>;
+    private serveStaticAsset;
+    private getContentType;
     private serveMetrics;
     private serveHydrationScript;
     private handleRequest;

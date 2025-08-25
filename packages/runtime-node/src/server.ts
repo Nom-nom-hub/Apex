@@ -1,4 +1,8 @@
 import { createServer, Server, IncomingMessage, ServerResponse } from 'http';
+import { join, extname } from 'path';
+import { existsSync, readFileSync, statSync } from 'fs';
+import { scanRoutes, matchRoute } from '@apex/core';
+import { renderPage } from '@apex/renderer-react';
 
 export interface DevServerOptions {
   port?: number;
@@ -30,6 +34,11 @@ export class DevServer {
             // Handle client-side hydration script
             if (req.url === '/island-hydration.js') {
               await this.serveHydrationScript(res);
+              return;
+            }
+            
+            // Handle static assets
+            if (req.url && this.serveStaticAsset(req, res)) {
               return;
             }
             
@@ -71,6 +80,63 @@ export class DevServer {
         resolve();
       }
     });
+  }
+  
+  private serveStaticAsset(req: IncomingMessage, res: ServerResponse): boolean {
+    if (!req.url) return false;
+    
+    // Check if there's a public directory
+    const publicDir = join(process.cwd(), 'public');
+    if (!existsSync(publicDir)) return false;
+    
+    // Resolve the file path
+    const filePath = join(publicDir, req.url);
+    
+    // Prevent directory traversal
+    const relativePath = join('/', req.url);
+    if (relativePath.includes('..')) {
+      res.statusCode = 403;
+      res.end('Forbidden');
+      return true;
+    }
+    
+    // Check if file exists
+    if (!existsSync(filePath)) return false;
+    
+    // Check if it's a file (not a directory)
+    const stat = statSync(filePath);
+    if (!stat.isFile()) return false;
+    
+    // Set content type based on file extension
+    const ext = extname(filePath).toLowerCase();
+    const contentType = this.getContentType(ext);
+    res.setHeader('Content-Type', contentType);
+    
+    // Read and serve the file
+    const fileContent = readFileSync(filePath);
+    res.end(fileContent);
+    return true;
+  }
+  
+  private getContentType(ext: string): string {
+    const contentTypes: Record<string, string> = {
+      '.html': 'text/html',
+      '.css': 'text/css',
+      '.js': 'application/javascript',
+      '.json': 'application/json',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif',
+      '.svg': 'image/svg+xml',
+      '.ico': 'image/x-icon',
+      '.woff': 'font/woff',
+      '.woff2': 'font/woff2',
+      '.ttf': 'font/ttf',
+      '.eot': 'application/vnd.ms-fontobject'
+    };
+    
+    return contentTypes[ext] || 'application/octet-stream';
   }
   
   private async serveMetrics(res: ServerResponse): Promise<void> {
@@ -180,24 +246,78 @@ apex_request_duration_ms_count 10
       return;
     }
     
-    // For simplicity, we'll just serve a simple static page
-    const simpleHtml = `
+    try {
+      // Scan routes
+      const routes = scanRoutes(this.options.routesDir);
+      
+      // Match route
+      const matchedRoute = matchRoute(routes, req.url);
+      
+      if (!matchedRoute) {
+        res.statusCode = 404;
+        res.end('Not Found');
+        return;
+      }
+      
+      // Convert .page.tsx path to .page.js path
+      const jsFilePath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.page.js');
+      
+      // Import the route module
+      const routeModule = await import(jsFilePath);
+      
+      // Get the default export (the page component)
+      const PageComponent = routeModule.default;
+      
+      if (!PageComponent) {
+        res.statusCode = 500;
+        res.end('Route module does not export a default component');
+        return;
+      }
+      
+      // Check if there's a loader for this route
+      let loaderData = {};
+      const loaderPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.ts');
+      const loaderJsPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.js');
+      
+      if (existsSync(loaderJsPath)) {
+        try {
+          const loaderModule = await import(loaderJsPath);
+          if (loaderModule.loader) {
+            loaderData = await loaderModule.loader();
+          }
+        } catch (error) {
+          console.error('Error loading route data:', error);
+        }
+      }
+      
+      // Render the page
+      const renderResult = await renderPage(PageComponent, loaderData);
+      
+      // Create full HTML document
+      const html = `
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Apex App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   <div id="root">
-    <h1>Hello Apex!</h1>
-    <p>This is a simple page for testing observability.</p>
+    ${renderResult.html}
   </div>
   <script src="/island-hydration.js"></script>
 </body>
 </html>
-    `.trim();
-    
-    res.setHeader('Content-Type', 'text/html');
-    res.end(simpleHtml);
+      `.trim();
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.end(html);
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      res.statusCode = 500;
+      res.end('Internal Server Error');
+    }
   }
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { build } from 'esbuild';
-import { join, resolve } from 'path';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { join, resolve, dirname } from 'path';
+import { existsSync, mkdirSync, writeFileSync, readdirSync, statSync } from 'fs';
 
 interface BuildOptions {
   entryPoints: string[];
@@ -32,6 +32,9 @@ async function buildProject(options: BuildOptions) {
       target: options.target,
       minify: options.minify,
       sourcemap: options.sourcemap,
+      jsx: 'transform',
+      jsxFactory: 'React.createElement',
+      jsxFragment: 'React.Fragment',
       // Add any additional esbuild options here
     });
 
@@ -45,22 +48,75 @@ async function buildProject(options: BuildOptions) {
   }
 }
 
+// Function to scan for route files
+function scanRouteFiles(routesDir: string): string[] {
+  const entryPoints: string[] = [];
+  
+  function scanDirectory(dir: string) {
+    const entries = readdirSync(dir);
+    
+    for (const entry of entries) {
+      const fullPath = join(dir, entry);
+      const stats = statSync(fullPath);
+      
+      if (stats.isDirectory()) {
+        scanDirectory(fullPath);
+      } else if (stats.isFile() && (entry.endsWith('.page.tsx') || entry.endsWith('.loader.ts') || entry.endsWith('.action.ts'))) {
+        entryPoints.push(fullPath);
+      }
+    }
+  }
+  
+  if (existsSync(routesDir)) {
+    scanDirectory(routesDir);
+  }
+  
+  return entryPoints;
+}
+
+// Function to scan for island components
+function scanIslandFiles(componentsDir: string): string[] {
+  const entryPoints: string[] = [];
+  
+  function scanDirectory(dir: string) {
+    const entries = readdirSync(dir);
+    
+    for (const entry of entries) {
+      const fullPath = join(dir, entry);
+      const stats = statSync(fullPath);
+      
+      if (stats.isDirectory()) {
+        scanDirectory(fullPath);
+      } else if (stats.isFile() && entry.endsWith('.island.tsx')) {
+        entryPoints.push(fullPath);
+      }
+    }
+  }
+  
+  if (existsSync(componentsDir)) {
+    scanDirectory(componentsDir);
+  }
+  
+  return entryPoints;
+}
+
 // Main build function
 export async function buildCommand(projectDir: string = process.cwd()) {
   console.log(`Building project at: ${projectDir}`);
   
-  // Define entry points (this would typically be more sophisticated)
-  const entryPoints = [
-    join(projectDir, 'app', 'routes', 'index.page.tsx'),
-    join(projectDir, 'app', 'routes', 'dashboard', 'index.page.tsx'),
-    // Add more entry points as needed
-  ].filter(existsSync);
+  // Define entry points by scanning directories
+  const routesDir = join(projectDir, 'app', 'routes');
+  const componentsDir = join(projectDir, 'app', 'components');
+  
+  const routeEntryPoints = scanRouteFiles(routesDir);
+  const islandEntryPoints = scanIslandFiles(componentsDir);
   
   // Filter out non-existent files
-  const validEntryPoints = entryPoints.filter(file => existsSync(file));
+  const validRouteEntryPoints = routeEntryPoints.filter(file => existsSync(file));
+  const validIslandEntryPoints = islandEntryPoints.filter(file => existsSync(file));
   
-  if (validEntryPoints.length === 0) {
-    console.warn('No valid entry points found. Creating a simple placeholder.');
+  if (validRouteEntryPoints.length === 0) {
+    console.warn('No valid route entry points found. Creating a simple placeholder.');
     const placeholderDir = join(projectDir, 'app', 'routes');
     if (!existsSync(placeholderDir)) {
       mkdirSync(placeholderDir, { recursive: true });
@@ -82,13 +138,13 @@ export default function HomePage() {
       `.trim());
     }
     
-    validEntryPoints.push(placeholderFile);
+    validRouteEntryPoints.push(placeholderFile);
   }
   
   // Server build
   console.log('Building server bundle...');
   await buildProject({
-    entryPoints: validEntryPoints,
+    entryPoints: validRouteEntryPoints,
     outdir: join(projectDir, 'dist', 'server'),
     bundle: true,
     platform: 'node',
@@ -99,19 +155,19 @@ export default function HomePage() {
   });
   
   // Client build (for islands)
-  console.log('Building client bundle...');
-  await buildProject({
-    entryPoints: [
-      join(projectDir, 'app', 'components', 'Counter.island.tsx')
-    ].filter(existsSync),
-    outdir: join(projectDir, 'dist', 'client'),
-    bundle: true,
-    platform: 'browser',
-    format: 'esm',
-    target: ['es2020'],
-    minify: true,
-    sourcemap: true,
-  });
+  if (validIslandEntryPoints.length > 0) {
+    console.log('Building client bundle...');
+    await buildProject({
+      entryPoints: validIslandEntryPoints,
+      outdir: join(projectDir, 'dist', 'client'),
+      bundle: true,
+      platform: 'browser',
+      format: 'esm',
+      target: ['es2020'],
+      minify: true,
+      sourcemap: true,
+    });
+  }
   
   // Create a simple server.js file that can run the built app
   const serverJsContent = `

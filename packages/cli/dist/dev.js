@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startDevServer = startDevServer;
 const path_1 = require("path");
+const runtime_node_1 = require("@apex/runtime-node");
 // Parse command line arguments for --runtime flag
 function parseRuntimeArg() {
     const args = process.argv.slice(2);
@@ -18,14 +19,21 @@ async function startDevServer() {
     const routesDir = (0, path_1.join)(process.cwd(), 'app', 'routes');
     console.log(`Starting development server with ${runtime} runtime...`);
     console.log(`Routes directory: ${routesDir}`);
-    console.log(`Development server running on http://localhost:3000`);
-    // Keep the process alive
-    process.on('SIGINT', () => {
-        console.log('Shutting down dev server...');
-        process.exit(0);
+    // Create and start the dev server
+    const server = new runtime_node_1.DevServer({
+        routesDir: routesDir
     });
-    // Simulate server running
-    setInterval(() => {
-        // Keep alive
-    }, 1000);
+    try {
+        await server.start();
+        // Keep the process alive
+        process.on('SIGINT', async () => {
+            console.log('Shutting down dev server...');
+            await server.stop();
+            process.exit(0);
+        });
+    }
+    catch (error) {
+        console.error('Failed to start dev server:', error);
+        process.exit(1);
+    }
 }
