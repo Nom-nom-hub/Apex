@@ -1,14 +1,12 @@
 // eslint.config.js
 const eslint = require('@eslint/js');
-const tseslint = require('@typescript-eslint/eslint-plugin');
-const tsParser = require('@typescript-eslint/parser');
 
 module.exports = [
   eslint.configs.recommended,
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
-      parser: tsParser,
+      parser: require('@typescript-eslint/parser'),
       ecmaVersion: 2020,
       sourceType: 'module',
       globals: {
@@ -16,9 +14,12 @@ module.exports = [
         es6: true
       }
     },
+    plugins: {
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin')
+    },
     rules: {
-      ...tseslint.configs.recommended.rules,
-      'no-console': 'warn'
+      'no-console': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn'
     }
   },
   {
