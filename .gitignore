@@ -202,3 +202,6 @@ benchmarks/
 
 # Apex build artifacts
 .apex/
+
+# npm configuration
+.npmrc
