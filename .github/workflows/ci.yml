@@ -27,6 +27,7 @@ jobs:
       run: |
         npm install -g pnpm@8
         echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
+        echo "PNPM version: $(pnpm --version)"
     
     - name: Get pnpm store directory
       id: pnpm-cache
@@ -66,6 +67,7 @@ jobs:
       run: |
         npm install -g pnpm@8
         echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
+        echo "PNPM version: $(pnpm --version)"
     
     - name: Get pnpm store directory
       id: pnpm-cache
@@ -106,6 +108,7 @@ jobs:
       run: |
         npm install -g pnpm@8
         echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
+        echo "PNPM version: $(pnpm --version)"
     
     - name: Get pnpm store directory
       id: pnpm-cache
