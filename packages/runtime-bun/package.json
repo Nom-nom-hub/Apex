@@ -1,5 +1,5 @@
 {
-  "name": "@apex/runtime-bun",
+  "name": "@blazeinstall-apex/runtime-bun",
   "version": "0.0.1",
   "description": "Bun runtime adapter for Apex framework",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@apex/core": "workspace:*"
+    "@blazeinstall-apex/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@apex/framework",
+  "name": "@blazeinstall-apex/framework",
   "version": "0.0.1",
   "description": "Apex framework - A modern web framework with islands architecture",
   "main": "dist/index.js",
@@ -16,10 +16,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apex/core": "workspace:*",
-    "@apex/cli": "workspace:*",
-    "@apex/runtime-node": "workspace:*",
-    "@apex/renderer-react": "workspace:*"
+    "@blazeinstall-apex/core": "workspace:*",
+    "@blazeinstall-apex/cli": "workspace:*",
+    "@blazeinstall-apex/runtime-node": "workspace:*",
+    "@blazeinstall-apex/renderer-react": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

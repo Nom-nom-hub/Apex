@@ -1,5 +1,5 @@
 {
-  "name": "@apex/cli",
+  "name": "@blazeinstall-apex/cli",
   "version": "0.0.1",
   "description": "CLI for Apex framework",
   "main": "dist/index.js",
@@ -20,8 +20,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apex/core": "workspace:*",
-    "@apex/runtime-node": "workspace:*",
+    "@blazeinstall-apex/core": "workspace:*",
+    "@blazeinstall-apex/runtime-node": "workspace:*",
     "esbuild": "^0.25.9"
   },
   "devDependencies": {
