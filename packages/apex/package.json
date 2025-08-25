@@ -1,5 +1,5 @@
 {
-  "name": "apex",
+  "name": "@apex/framework",
   "version": "0.0.1",
   "description": "Apex framework - A modern web framework with islands architecture",
   "main": "dist/index.js",
@@ -7,6 +7,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
