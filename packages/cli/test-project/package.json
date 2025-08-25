@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "test-project",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@apex-framework/core": "^0.0.2",
-    "@apex-framework/cli": "^0.0.2"
+    "@apex-framework/cli": "^0.0.3"
   }
 }

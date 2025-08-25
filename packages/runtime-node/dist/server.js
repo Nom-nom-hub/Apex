@@ -39,6 +39,13 @@ const path_1 = require("path");
 const fs_1 = require("fs");
 const core_1 = require("@apex-framework/core");
 const renderer_react_1 = require("@apex-framework/renderer-react");
+// Register ts-node for TypeScript file loading in development
+try {
+    require('ts-node/register');
+}
+catch (error) {
+    // ts-node might not be available in production builds, ignore
+}
 class DevServer {
     constructor(options) {
         this.server = null;
@@ -271,10 +278,17 @@ apex_request_duration_ms_count 10
                 res.end('Not Found');
                 return;
             }
-            // Convert .page.tsx path to .page.js path
-            const jsFilePath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.page.js');
+            // Determine the module file path (try .tsx first, then .js)
+            let moduleFilePath = matchedRoute.filePath;
+            if (!(0, fs_1.existsSync)(moduleFilePath)) {
+                // Try .js version if .tsx doesn't exist
+                moduleFilePath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.page.js');
+                if (!(0, fs_1.existsSync)(moduleFilePath)) {
+                    throw new Error(`Neither ${matchedRoute.filePath} nor ${moduleFilePath} exist`);
+                }
+            }
             // Import the route module
-            const routeModule = await Promise.resolve(`${jsFilePath}`).then(s => __importStar(require(s)));
+            const routeModule = await Promise.resolve(`${moduleFilePath}`).then(s => __importStar(require(s)));
             // Get the default export (the page component)
             const PageComponent = routeModule.default;
             if (!PageComponent) {
@@ -284,11 +298,19 @@ apex_request_duration_ms_count 10
             }
             // Check if there's a loader for this route
             let loaderData = {};
-            const loaderPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.ts');
+            const loaderTsPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.ts');
             const loaderJsPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.js');
-            if ((0, fs_1.existsSync)(loaderJsPath)) {
+            // Try TypeScript loader first, then JavaScript
+            let loaderFilePath = null;
+            if ((0, fs_1.existsSync)(loaderTsPath)) {
+                loaderFilePath = loaderTsPath;
+            }
+            else if ((0, fs_1.existsSync)(loaderJsPath)) {
+                loaderFilePath = loaderJsPath;
+            }
+            if (loaderFilePath) {
                 try {
-                    const loaderModule = await Promise.resolve(`${loaderJsPath}`).then(s => __importStar(require(s)));
+                    const loaderModule = await Promise.resolve(`${loaderFilePath}`).then(s => __importStar(require(s)));
                     if (loaderModule.loader) {
                         loaderData = await loaderModule.loader();
                     }

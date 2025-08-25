@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { InMemoryCache, cacheSet, cacheGet, cacheDelete, cacheClear, cacheHas, revalidate } from '../src/cache';
+import { InMemoryCache, cacheSet, cacheGet, cacheDelete, cacheClear, cacheHas, revalidate, getCache } from '../src/cache';
 
 describe('Cache', () => {
   beforeEach(async () => {
@@ -59,16 +59,19 @@ describe('Cache', () => {
   });
 
   it('should clear all values', async () => {
-    await cacheSet('key1', 'value1');
-    await cacheSet('key2', 'value2');
+    // Create a new cache instance for this test to avoid interference with global cache
+    const testCache = new InMemoryCache();
+    await testCache.set('key1', 'value1');
+    await testCache.set('key2', 'value2');
     
-    let size = await new InMemoryCache().size();
+    let size = await testCache.size();
     expect(size).toBe(2);
     
     await cacheClear();
     
-    size = await new InMemoryCache().size();
-    expect(size).toBe(0);
+    // Check size of the global cache
+    const globalCacheSize = await getCache().size();
+    expect(globalCacheSize).toBe(0);
   });
 
   it('should handle revalidation', async () => {

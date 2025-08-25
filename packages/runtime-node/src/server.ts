@@ -4,6 +4,13 @@ import { existsSync, readFileSync, statSync } from 'fs';
 import { scanRoutes, matchRoute } from '@apex-framework/core';
 import { renderPage } from '@apex-framework/renderer-react';
 
+// Register ts-node for TypeScript file loading in development
+try {
+  require('ts-node/register');
+} catch (error) {
+  // ts-node might not be available in production builds, ignore
+}
+
 export interface DevServerOptions {
   port?: number;
   routesDir: string;
@@ -259,11 +266,18 @@ apex_request_duration_ms_count 10
         return;
       }
       
-      // Convert .page.tsx path to .page.js path
-      const jsFilePath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.page.js');
-      
+      // Determine the module file path (try .tsx first, then .js)
+      let moduleFilePath = matchedRoute.filePath;
+      if (!existsSync(moduleFilePath)) {
+        // Try .js version if .tsx doesn't exist
+        moduleFilePath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.page.js');
+        if (!existsSync(moduleFilePath)) {
+          throw new Error(`Neither ${matchedRoute.filePath} nor ${moduleFilePath} exist`);
+        }
+      }
+
       // Import the route module
-      const routeModule = await import(jsFilePath);
+      const routeModule = await import(moduleFilePath);
       
       // Get the default export (the page component)
       const PageComponent = routeModule.default;
@@ -276,12 +290,20 @@ apex_request_duration_ms_count 10
       
       // Check if there's a loader for this route
       let loaderData = {};
-      const loaderPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.ts');
+      const loaderTsPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.ts');
       const loaderJsPath = matchedRoute.filePath.replace(/\.page\.tsx$/, '.loader.js');
-      
-      if (existsSync(loaderJsPath)) {
+
+      // Try TypeScript loader first, then JavaScript
+      let loaderFilePath = null;
+      if (existsSync(loaderTsPath)) {
+        loaderFilePath = loaderTsPath;
+      } else if (existsSync(loaderJsPath)) {
+        loaderFilePath = loaderJsPath;
+      }
+
+      if (loaderFilePath) {
         try {
-          const loaderModule = await import(loaderJsPath);
+          const loaderModule = await import(loaderFilePath);
           if (loaderModule.loader) {
             loaderData = await loaderModule.loader();
           }

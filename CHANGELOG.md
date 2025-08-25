@@ -26,6 +26,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Various bug fixes and performance improvements
 
+## [0.1.1] - 2025-08-25
+
+### Fixed
+- Fixed cache test in core package that was failing due to global cache state interference
+- Fixed CLI tests to properly handle directory creation and command outputs
+- Updated package versions to 0.1.1 for all packages
+- Published updated packages to npm
+
 ## [0.1.0] - 2025-08-17
 
 Initial release of the Apex framework with core features:

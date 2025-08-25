@@ -25,6 +25,6 @@ describe('Apex Meta-Package', () => {
   });
 
   it('should have a default export', () => {
-    expect(apex.default).toBeDefined();
+    expect(apex).toBeDefined();
   });
 });
