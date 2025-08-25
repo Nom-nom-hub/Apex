@@ -1,7 +1,5 @@
 // vitest.setup.ts
-import { webcrypto } from 'node:crypto'
+import crypto from 'crypto-browserify'
 
 // Polyfill for crypto.getRandomValues
-Object.defineProperty(globalThis, 'crypto', {
-  value: webcrypto
-})
+global.crypto = crypto as any
