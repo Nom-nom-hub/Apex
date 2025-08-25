@@ -8,7 +8,7 @@
     "start": "apex start"
   },
   "dependencies": {
-    "@apex/core": "workspace:*",
-    "@apex/cli": "workspace:*"
+    "@apex-framework/core": "workspace:*",
+    "@apex-framework/cli": "workspace:*"
   }
 }
