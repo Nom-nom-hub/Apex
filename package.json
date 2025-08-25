@@ -2,6 +2,7 @@
   "name": "apex-monorepo",
   "version": "0.1.1",
   "private": true,
+  // Triggering CI workflow
   "workspaces": [
     "packages/*",
     "examples/*"
