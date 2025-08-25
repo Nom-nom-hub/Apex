@@ -1,5 +1,5 @@
 {
-  "name": "@blazeinstall-apex/runtime-deno",
+  "name": "@apex-framework/runtime-deno",
   "version": "0.0.1",
   "description": "Deno runtime adapter for Apex framework",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
     "test": "deno test"
   },
   "dependencies": {
-    "@blazeinstall-apex/core": "workspace:*"
+    "@apex-framework/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

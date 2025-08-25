@@ -1,5 +1,5 @@
 {
-  "name": "@blazeinstall-apex/renderer-react",
+  "name": "@apex-framework/renderer-react",
   "version": "0.0.1",
   "description": "React renderer for Apex framework",
   "main": "dist/index.js",
