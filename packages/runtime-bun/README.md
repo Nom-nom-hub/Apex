@@ -1,72 +1,27 @@
-# @apex/runtime-bun
+# @apex-framework/runtime-bun
 
 Bun runtime adapter for the Apex framework.
-
-## Overview
-
-This package provides a Bun-specific runtime adapter for the Apex framework. It includes implementations for the HTTP server and file watching capabilities using Bun's native APIs.
-
-## Features
-
-- High-performance HTTP server using `Bun.serve`
-- Efficient file watching with `Bun.watch`
-- Seamless integration with Apex core functionality
-- Optimized for Bun's JavaScript runtime
 
 ## Installation
 
 ```bash
-npm install @apex/runtime-bun
+npm install @apex-framework/runtime-bun
 ```
 
 ## Usage
 
-The Bun runtime adapter is automatically used when running:
+```javascript
+import { BunServer } from '@apex-framework/runtime-bun';
 
-```bash
-apex dev --runtime=bun
+// Use the Bun runtime
 ```
 
-or
+## Features
 
-```bash
-apex start --runtime=bun
-```
+- Bun development server
+- Production server adapter
+- Integration with Apex core
 
-## API
+## Documentation
 
-### BunServer
-
-Implements the HTTP server using Bun's native server capabilities.
-
-### BunFileWatcher
-
-Implements file watching using Bun's native file watching capabilities.
-
-## Requirements
-
-- Bun v1.0 or higher
-- Node.js is not required when using this adapter
-
-## Performance
-
-The Bun runtime adapter takes advantage of Bun's optimizations:
-
-- Faster startup times compared to Node.js
-- Lower memory footprint
-- Native support for TypeScript and JSX
-- Built-in bundler for optimized builds
-
-## Limitations
-
-- Only compatible with Bun runtime
-- Some Node.js-specific APIs may not be available
-- Limited ecosystem compared to Node.js
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
-
-## License
-
-MIT
+For full documentation, visit [https://apex-framework.github.io/docs](https://apex-framework.github.io/docs)

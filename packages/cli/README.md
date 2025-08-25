@@ -1,16 +1,37 @@
-# @apex/cli
+# @apex-framework/cli
 
-The command line interface for Apex framework.
+CLI for the Apex framework.
+
+## Installation
+
+```bash
+npm install -g @apex-framework/cli
+```
 
 ## Usage
 
 ```bash
-npx @apex/cli create my-app
-cd my-app
-npx @apex/cli dev
+# Create a new Apex project
+apex create my-app
+
+# Start the development server
+apex dev
+
+# Build for production
+apex build
+
+# Start the production server
+apex start
 ```
 
 ## Commands
 
-- `create <name>` - Create a new Apex project
-- `dev` - Start the development server
+- `apex create <name>` - Create a new Apex project
+- `apex dev` - Start the development server
+- `apex build` - Build for production
+- `apex start` - Start the production server
+- `apex deploy` - Deploy the application
+
+## Documentation
+
+For full documentation, visit [https://apex-framework.github.io/docs](https://apex-framework.github.io/docs)

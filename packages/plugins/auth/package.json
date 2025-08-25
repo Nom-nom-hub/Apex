@@ -1,6 +1,6 @@
 {
   "name": "@apex-framework/plugin-auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Authentication plugin for Apex framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@apex-framework/core": "^0.0.1",
+    "@apex-framework/core": "^0.0.2",
     "jsonwebtoken": "^9.0.0",
     "cookie-parser": "^1.4.6"
   },
