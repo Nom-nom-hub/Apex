@@ -24,10 +24,10 @@ jobs:
         cache: 'pnpm'
     
     - name: Install pnpm
-      run: |
-        npm install -g pnpm@8
-        echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
-        echo "PNPM version: $(pnpm --version)"
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        run_install: false
     
     - name: Get pnpm store directory
       id: pnpm-cache
@@ -64,10 +64,10 @@ jobs:
         cache: 'pnpm'
     
     - name: Install pnpm
-      run: |
-        npm install -g pnpm@8
-        echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
-        echo "PNPM version: $(pnpm --version)"
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        run_install: false
     
     - name: Get pnpm store directory
       id: pnpm-cache
@@ -105,10 +105,10 @@ jobs:
         cache: 'pnpm'
     
     - name: Install pnpm
-      run: |
-        npm install -g pnpm@8
-        echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
-        echo "PNPM version: $(pnpm --version)"
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        run_install: false
     
     - name: Get pnpm store directory
       id: pnpm-cache
