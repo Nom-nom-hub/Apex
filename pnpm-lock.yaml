@@ -51,16 +51,16 @@ importers:
 
   examples/blog:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../../packages/renderer-react
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../../packages/runtime-node
       react:
@@ -72,16 +72,16 @@ importers:
 
   examples/docs:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../../packages/renderer-react
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../../packages/runtime-node
       react:
@@ -93,16 +93,16 @@ importers:
 
   examples/ecommerce-starter:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../../packages/renderer-react
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../../packages/runtime-node
       react:
@@ -114,25 +114,25 @@ importers:
 
   examples/hello-apex:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../../packages/core
 
   examples/saas-starter:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../../packages/renderer-react
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../../packages/runtime-node
       react:
@@ -144,16 +144,16 @@ importers:
 
   packages/apex:
     dependencies:
-      '@apex/cli':
+      '@apex-framework/cli':
         specifier: workspace:*
         version: link:../cli
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../renderer-react
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../runtime-node
     devDependencies:
@@ -169,10 +169,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../core
-      '@apex/runtime-node':
+      '@apex-framework/runtime-node':
         specifier: workspace:*
         version: link:../runtime-node
       esbuild:
@@ -217,22 +217,6 @@ importers:
         specifier: ^0.34.0
         version: 0.34.6(jsdom@26.1.0)
 
-  packages/plugins/auth:
-    dependencies:
-      '@apex/core':
-        specifier: workspace:*
-        version: link:../../core
-      cookie-parser:
-        specifier: ^1.4.6
-        version: 1.4.7
-      jsonwebtoken:
-        specifier: ^9.0.0
-        version: 9.0.2
-    devDependencies:
-      typescript:
-        specifier: ^5.0.0
-        version: 5.9.2
-
   packages/renderer-react:
     dependencies:
       react:
@@ -263,7 +247,7 @@ importers:
 
   packages/runtime-bun:
     dependencies:
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -276,7 +260,7 @@ importers:
 
   packages/runtime-deno:
     dependencies:
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -289,10 +273,10 @@ importers:
 
   packages/runtime-node:
     dependencies:
-      '@apex/core':
+      '@apex-framework/core':
         specifier: workspace:*
         version: link:../core
-      '@apex/renderer-react':
+      '@apex-framework/renderer-react':
         specifier: workspace:*
         version: link:../renderer-react
     devDependencies:
