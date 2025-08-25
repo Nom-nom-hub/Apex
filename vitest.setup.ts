@@ -1,5 +1,22 @@
 // vitest.setup.ts
-import crypto from 'crypto-browserify'
-
-// Polyfill for crypto.getRandomValues
-global.crypto = crypto as any
+// Mock crypto.getRandomValues for Node.js environment
+if (!global.crypto) {
+  global.crypto = {
+    getRandomValues: (array: any) => {
+      if (typeof require !== 'undefined') {
+        const crypto = require('node:crypto');
+        return crypto.randomFillSync(array);
+      }
+      return array;
+    }
+  } as any;
+} else if (!global.crypto.getRandomValues) {
+  if (typeof require !== 'undefined') {
+    const crypto = require('node:crypto');
+    global.crypto.getRandomValues = (array: any) => {
+      return crypto.randomFillSync(array);
+    };
+  } else {
+    global.crypto.getRandomValues = (array: any) => array;
+  }
+}
