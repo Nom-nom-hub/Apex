@@ -1,15 +1,12 @@
 // vitest.setup.ts
-// Mock crypto.getRandomValues for Node.js environment
+// Polyfill for crypto.getRandomValues in Node.js environment
 const crypto = require('node:crypto');
 
-if (!global.crypto) {
-  global.crypto = {
+// Define crypto on globalThis if it doesn't exist
+if (!globalThis.crypto) {
+  globalThis.crypto = {
     getRandomValues: (array: any) => {
       return crypto.randomFillSync(array);
     }
-  } as any;
-} else if (!global.crypto.getRandomValues) {
-  global.crypto.getRandomValues = (array: any) => {
-    return crypto.randomFillSync(array);
   };
 }
