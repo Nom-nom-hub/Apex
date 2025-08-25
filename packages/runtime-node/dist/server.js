@@ -37,8 +37,8 @@ exports.DevServer = void 0;
 const http_1 = require("http");
 const path_1 = require("path");
 const fs_1 = require("fs");
-const core_1 = require("@apex/core");
-const renderer_react_1 = require("@apex/renderer-react");
+const core_1 = require("@apex-framework/core");
+const renderer_react_1 = require("@apex-framework/renderer-react");
 class DevServer {
     constructor(options) {
         this.server = null;

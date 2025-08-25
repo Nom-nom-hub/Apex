@@ -1,8 +1,8 @@
 import { createServer, Server, IncomingMessage, ServerResponse } from 'http';
 import { join, extname } from 'path';
 import { existsSync, readFileSync, statSync } from 'fs';
-import { scanRoutes, matchRoute } from '@apex/core';
-import { renderPage } from '@apex/renderer-react';
+import { scanRoutes, matchRoute } from '@apex-framework/core';
+import { renderPage } from '@apex-framework/renderer-react';
 
 export interface DevServerOptions {
   port?: number;

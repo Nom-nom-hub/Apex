@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { DevServer } from '@apex/runtime-node';
+import { DevServer } from '@apex-framework/runtime-node';
 
 // Parse command line arguments for --runtime flag
 function parseRuntimeArg(): string {

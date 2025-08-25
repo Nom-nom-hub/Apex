@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startDevServer = startDevServer;
 const path_1 = require("path");
-const runtime_node_1 = require("@apex/runtime-node");
+const runtime_node_1 = require("@apex-framework/runtime-node");
 // Parse command line arguments for --runtime flag
 function parseRuntimeArg() {
     const args = process.argv.slice(2);
