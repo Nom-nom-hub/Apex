@@ -1,6 +1,6 @@
 {
   "name": "apex-monorepo",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -9,11 +9,12 @@
   ],
   "scripts": {
     "dev": "echo \"No dev script yet\"",
-    "build": "pnpm --filter \"@apex/*\" build",
+    "build": "pnpm --filter \"@apex-framework/*\" build",
     "test": "vitest run",
     "lint": "eslint . --ext .ts,.tsx",
     "docs:dev": "pnpm --filter apex-docs dev",
-    "docs:build": "pnpm --filter apex-docs build"
+    "docs:build": "pnpm --filter apex-docs build",
+    "publish:all": "node scripts/publish.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
