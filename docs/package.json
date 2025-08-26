@@ -1,0 +1,16 @@
+{
+  "name": "apex-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "apex dev",
+    "build": "apex build",
+    "start": "apex start"
+  },
+  "dependencies": {
+    "@apex/core": "workspace:*",
+    "@apex/renderer-react": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

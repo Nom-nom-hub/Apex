@@ -4,13 +4,16 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "examples/*"
+    "examples/*",
+    "docs"
   ],
   "scripts": {
     "dev": "echo \"No dev script yet\"",
     "build": "echo \"No build script yet\"",
     "test": "vitest run",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "docs:dev": "pnpm --filter apex-docs dev",
+    "docs:build": "pnpm --filter apex-docs build"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
