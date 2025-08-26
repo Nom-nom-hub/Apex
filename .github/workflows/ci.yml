@@ -30,8 +30,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     
-    - name: Build
-      run: pnpm run build
+    - name: Build packages
+      run: pnpm build
 
   lint:
     runs-on: ubuntu-latest
@@ -83,6 +83,9 @@ jobs:
     
     - name: Build docs website
       run: |
+        # Build packages first to ensure CLI is available
+        pnpm build
+        # Build the docs website
         pnpm --filter apex-docs build
         # Copy the built docs to the docs directory for GitHub Pages
         rm -rf docs
