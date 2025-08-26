@@ -7,14 +7,7 @@
     "examples/*",
     "docs"
   ],
-  "scripts": {
-    "dev": "echo \"No dev script yet\"",
-    "build": "echo \"No build script yet\"",
-    "test": "vitest run",
-    "lint": "eslint . --ext .ts,.tsx",
-    "docs:dev": "pnpm --filter apex-docs dev",
-    "docs:build": "pnpm --filter apex-docs build"
-  },
+  \"scripts\": {\n    \"dev\": \"echo \\\"No dev script yet\\\"\",\n    \"build\": \"pnpm --filter \\\"@apex/*\\\" build\",\n    \"test\": \"vitest run\",\n    \"lint\": \"eslint . --ext .ts,.tsx\",\n    \"docs:dev\": \"pnpm --filter apex-docs dev\",\n    \"docs:build\": \"pnpm --filter apex-docs build\"\n  }
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "jsonwebtoken": "^9.0.0",

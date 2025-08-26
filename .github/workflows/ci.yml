@@ -31,7 +31,11 @@ jobs:
       run: pnpm install
     
     - name: Build packages
-      run: pnpm build
+      run: |
+        # Build the CLI package first
+        pnpm --filter @apex/cli build
+        # Build all packages
+        pnpm --filter "@apex/*" build
 
   lint:
     runs-on: ubuntu-latest
@@ -79,12 +83,14 @@ jobs:
       run: pnpm install
     
     - name: Build for production
-      run: pnpm run build
+      run: |
+        # Build the CLI package first
+        pnpm --filter @apex/cli build
+        # Build all packages
+        pnpm --filter "@apex/*" build
     
     - name: Build docs website
       run: |
-        # Build packages first to ensure CLI is available
-        pnpm build
         # Build the docs website
         cd docs
         pnpm build
