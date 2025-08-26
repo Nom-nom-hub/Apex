@@ -81,8 +81,15 @@ jobs:
     - name: Build for production
       run: pnpm run build
     
+    - name: Build docs website
+      run: |
+        pnpm --filter apex-docs build
+        # Copy the built docs to the docs directory for GitHub Pages
+        rm -rf docs
+        cp -r packages/docs/dist docs
+    
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./docs
