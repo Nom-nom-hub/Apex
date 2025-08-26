@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Framework</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #eee;
+            margin-top: 2rem;
+        }
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: #f8f9fa;
+            margin-bottom: 2rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .feature {
+            padding: 1.5rem;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .cta {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Apex Framework</h1>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#getting-started">Getting Started</a>
+            <a href="#examples">Examples</a>
+            <a href="https://github.com/Nom-nom-hub/Apex">GitHub</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <h2>Modern. Fast. Scalable.</h2>
+            <p>Apex is a full-stack web framework designed for building fast, scalable web applications with React and TypeScript.</p>
+            <div class="cta">
+                <a href="#getting-started" class="btn">Get Started</a>
+            </div>
+        </section>
+        
+        <section id="features">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>File-based Routing</h3>
+                    <p>Automatic routing based on your file structure. No more manual route configuration.</p>
+                </div>
+                <div class="feature">
+                    <h3>Server-side Rendering</h3>
+                    <p>Blazing fast initial page loads with server-side rendering and client-side hydration.</p>
+                </div>
+                <div class="feature">
+                    <h3>Partial Hydration</h3>
+                    <p>Only hydrate interactive components, reducing JavaScript bundle size and improving performance.</p>
+                </div>
+                <div class="feature">
+                    <h3>TypeScript Support</h3>
+                    <p>First-class TypeScript support with excellent type inference and autocompletion.</p>
+                </div>
+                <div class="feature">
+                    <h3>Plugin System</h3>
+                    <p>Extensible plugin system for adding functionality like authentication, caching, and more.</p>
+                </div>
+                <div class="feature">
+                    <h3>Developer Experience</h3>
+                    <p>Built-in development server with hot reloading, error overlay, and more.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="getting-started">
+            <h2>Getting Started</h2>
+            <p>To create a new Apex project, run:</p>
+            <pre><code>pnpm create apex-app@latest my-app</code></pre>
+            <p>Then navigate to your project directory and start the development server:</p>
+            <pre><code>cd my-app
+pnpm dev</code></pre>
+        </section>
+        
+        <section id="examples">
+            <h2>Examples</h2>
+            <p>Check out these example applications to see Apex in action:</p>
+            <ul>
+                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/hello-apex">Hello Apex</a> - Basic starter template</li>
+                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/blog">Blog</a> - Simple blog application</li>
+                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/ecommerce-starter">E-commerce</a> - E-commerce starter template</li>
+                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/saas-starter">SaaS</a> - SaaS application starter</li>
+            </ul>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© <span id="year"></span> Apex Framework. All rights reserved.</p>
+        <p>
+            <a href="https://github.com/Nom-nom-hub/Apex">GitHub</a> | 
+            <a href="https://github.com/Nom-nom-hub/Apex/issues">Issues</a> | 
+            <a href="https://github.com/Nom-nom-hub/Apex/discussions">Discussions</a>
+        </p>
+    </footer>
+    
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
