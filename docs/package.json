@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "apex dev",
-    "build": "apex build",
-    "start": "apex start"
+    "dev": "node ../packages/cli/dist/dev.js",
+    "build": "node ../packages/cli/dist/build.js",
+    "start": "node ../packages/cli/dist/start.js"
   },
   "dependencies": {
     "@apex/core": "workspace:*",

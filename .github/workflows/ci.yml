@@ -91,9 +91,9 @@ jobs:
     
     - name: Build docs website
       run: |
-        # Build the docs website
+        # Build the docs website using the locally built CLI
         cd docs
-        pnpm build
+        node ../packages/cli/dist/build.js
         cd ..
     
     - name: Deploy to GitHub Pages
