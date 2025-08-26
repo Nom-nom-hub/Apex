@@ -94,6 +94,9 @@ jobs:
         # Build the docs website using the locally built CLI
         cd docs
         node ../packages/cli/dist/build.js
+        # List the generated files for debugging
+        echo "Generated files in dist directory:"
+        ls -la dist/
         cd ..
     
     - name: Deploy to GitHub Pages
