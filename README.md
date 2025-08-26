@@ -1,7 +1,7 @@
 # Apex Framework
 
 [![Build Status](https://github.com/Nom-nom-hub/Apex/actions/workflows/ci.yml/badge.svg)](https://github.com/Nom-nom-hub/Apex/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/@apex%2Fcore.svg)](https://badge.fury.io/js/@apex%2Fcore)
+[![npm version](https://badge.fury.io/js/@apex%2Fcore.svg)](https://badge.fury.io/js/@apex-framework%2Fcore)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!-- Triggering CI workflow -->
