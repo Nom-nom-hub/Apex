@@ -1,6 +1,6 @@
 {
   "name": "@apex-framework/runtime-deno",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Deno runtime adapter for Apex framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
     "test": "deno test"
   },
   "dependencies": {
-    "@apex-framework/core": "workspace:*"
+    "@apex-framework/core": "^1.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

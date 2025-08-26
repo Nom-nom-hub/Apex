@@ -1,6 +1,6 @@
 {
   "name": "@apex-framework/apex",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Apex framework - A modern web framework with islands architecture",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,10 +16,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apex-framework/core": "workspace:*",
-    "@apex-framework/cli": "workspace:*",
-    "@apex-framework/runtime-node": "workspace:*",
-    "@apex-framework/renderer-react": "workspace:*"
+    "@apex-framework/core": "^1.0.0",
+    "@apex-framework/cli": "^1.0.0",
+    "@apex-framework/runtime-node": "^1.0.0",
+    "@apex-framework/renderer-react": "^1.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

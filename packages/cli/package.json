@@ -1,6 +1,6 @@
 {
   "name": "@apex-framework/cli",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "CLI for Apex framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,8 +20,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apex-framework/core": "workspace:*",
-    "@apex-framework/runtime-node": "workspace:*",
+    "@apex-framework/core": "^1.0.0",
+    "@apex-framework/runtime-node": "^1.0.0",
     "esbuild": "^0.25.9"
   },
   "devDependencies": {

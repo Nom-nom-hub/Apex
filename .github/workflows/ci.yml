@@ -5,6 +5,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -33,9 +35,9 @@ jobs:
     - name: Build packages
       run: |
         # Build the CLI package first
-        pnpm --filter @apex/cli build
+        pnpm --filter @apex-framework/cli build
         # Build all packages
-        pnpm --filter "@apex/*" build
+        pnpm --filter "@apex-framework/*" build
 
   lint:
     runs-on: ubuntu-latest
@@ -90,9 +92,9 @@ jobs:
     - name: Build for production
       run: |
         # Build the CLI package first
-        pnpm --filter @apex/cli build
+        pnpm --filter @apex-framework/cli build
         # Build all packages
-        pnpm --filter "@apex/*" build
+        pnpm --filter "@apex-framework/*" build
     
     - name: Setup Pages
       uses: actions/configure-pages@v5
@@ -105,3 +107,45 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build, lint]
+    
+    # Only run on release creation
+    if: github.event_name == 'release'
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 8
+    
+    - name: Install dependencies
+      run: pnpm install
+    
+    - name: Build packages
+      run: |
+        # Build the CLI package first
+        pnpm --filter @apex-framework/cli build
+        # Build all packages
+        pnpm --filter "@apex-framework/*" build
+    
+    - name: Publish to npm
+      run: |
+        # Publish all packages under the @apex-framework scope
+        pnpm --filter "@apex-framework/*" publish --access public --no-git-checks
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
