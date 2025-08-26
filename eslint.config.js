@@ -41,7 +41,8 @@ module.exports = [
       '.apex/',
       'eslint.config.js',
       'packages/*/dist/',
-      'packages/*/bin/'
+      'packages/*/bin/',
+      'scripts/'
     ]
   }
 ];
