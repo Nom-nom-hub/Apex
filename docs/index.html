@@ -3,163 +3,680 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Framework</title>
+    <title>Apex Framework - Modern Full-Stack Web Framework</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #8b5cf6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: var(--dark);
+            background-color: var(--light);
             line-height: 1.6;
-            color: #333;
         }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Header */
         header {
-            background-color: #333;
-            color: white;
-            padding: 1rem;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        nav {
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 10rem 0 5rem;
+            text-align: center;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjAuNSIgZmlsbD0iI2QxZDRlYSIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=') center/cover;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+        
+        .hero-buttons {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-bottom: 3rem;
         }
-        nav a {
-            color: white;
+        
+        .secondary-button {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
+            display: inline-block;
         }
-        nav a:hover {
-            text-decoration: underline;
+        
+        .secondary-button:hover {
+            background: var(--primary);
+            color: white;
         }
-        main {
+        
+        .hero-image {
             max-width: 800px;
             margin: 0 auto;
-            padding: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: float 6s ease-in-out infinite;
         }
-        footer {
+        
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Features Section */
+        .section {
+            padding: 6rem 0;
+        }
+        
+        .section-header {
             text-align: center;
-            padding: 2rem;
-            border-top: 1px solid #eee;
-            margin-top: 2rem;
+            max-width: 700px;
+            margin: 0 auto 4rem;
         }
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-            background-color: #f8f9fa;
-            margin-bottom: 2rem;
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
         }
-        .features {
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+        }
+        
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin: 2rem 0;
         }
-        .feature {
-            padding: 1.5rem;
-            border: 1px solid #eee;
-            border-radius: 5px;
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .cta {
-            text-align: center;
-            margin: 2rem 0;
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #007bff;
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            font-size: 1.5rem;
         }
-        .btn:hover {
-            background-color: #0056b3;
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: var(--gray);
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 20px;
+            margin: 4rem 0;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-description {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section {
+                padding: 4rem 0;
+            }
+        }
+        
+        /* Code Block */
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+        
+        .token.keyword {
+            color: #81a1c1;
+        }
+        
+        .token.function {
+            color: #8fbcbb;
+        }
+        
+        .token.string {
+            color: #a3be8c;
+        }
+        
+        .token.comment {
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <h1>Apex Framework</h1>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#getting-started">Getting Started</a>
-            <a href="#examples">Examples</a>
-            <a href="https://github.com/Nom-nom-hub/Apex">GitHub</a>
-        </nav>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-mountain"></i>
+                    Apex
+                </a>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#docs">Documentation</a>
+                    <a href="#examples">Examples</a>
+                    <a href="https://github.com/Nom-nom-hub/Apex">GitHub</a>
+                </div>
+                <a href="https://github.com/Nom-nom-hub/Apex" class="cta-button">
+                    <i class="fab fa-github"></i> Star on GitHub
+                </a>
+            </nav>
+        </div>
     </header>
-    
-    <main>
-        <section class="hero">
-            <h2>Modern. Fast. Scalable.</h2>
-            <p>Apex is a full-stack web framework designed for building fast, scalable web applications with React and TypeScript.</p>
-            <div class="cta">
-                <a href="#getting-started" class="btn">Get Started</a>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Build Modern Web Applications with Apex</h1>
+            <p>Apex is a full-stack web framework designed for building fast, scalable, and maintainable web applications with React and TypeScript.</p>
+            <div class="hero-buttons">
+                <a href="#get-started" class="cta-button">Get Started</a>
+                <a href="#features" class="secondary-button">Learn More</a>
             </div>
-        </section>
-        
-        <section id="features">
-            <h2>Features</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>File-based Routing</h3>
-                    <p>Automatic routing based on your file structure. No more manual route configuration.</p>
-                </div>
-                <div class="feature">
-                    <h3>Server-side Rendering</h3>
-                    <p>Blazing fast initial page loads with server-side rendering and client-side hydration.</p>
-                </div>
-                <div class="feature">
-                    <h3>Partial Hydration</h3>
-                    <p>Only hydrate interactive components, reducing JavaScript bundle size and improving performance.</p>
-                </div>
-                <div class="feature">
-                    <h3>TypeScript Support</h3>
-                    <p>First-class TypeScript support with excellent type inference and autocompletion.</p>
-                </div>
-                <div class="feature">
-                    <h3>Plugin System</h3>
-                    <p>Extensible plugin system for adding functionality like authentication, caching, and more.</p>
-                </div>
-                <div class="feature">
-                    <h3>Developer Experience</h3>
-                    <p>Built-in development server with hot reloading, error overlay, and more.</p>
+            
+            <div class="hero-image">
+                <div style="background: linear-gradient(135deg, #2563eb, #8b5cf6); height: 300px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                    <i class="fas fa-rocket" style="margin-right: 1rem;"></i> 
+                    Apex Framework Preview
                 </div>
             </div>
-        </section>
-        
-        <section id="getting-started">
-            <h2>Getting Started</h2>
-            <p>To create a new Apex project, run:</p>
-            <pre><code>pnpm create apex-app@latest my-app</code></pre>
-            <p>Then navigate to your project directory and start the development server:</p>
-            <pre><code>cd my-app
-pnpm dev</code></pre>
-        </section>
-        
-        <section id="examples">
-            <h2>Examples</h2>
-            <p>Check out these example applications to see Apex in action:</p>
-            <ul>
-                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/hello-apex">Hello Apex</a> - Basic starter template</li>
-                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/blog">Blog</a> - Simple blog application</li>
-                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/ecommerce-starter">E-commerce</a> - E-commerce starter template</li>
-                <li><a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/saas-starter">SaaS</a> - SaaS application starter</li>
-            </ul>
-        </section>
-    </main>
-    
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need to build modern web applications</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3 class="feature-title">File-based Routing</h3>
+                    <p class="feature-description">Automatic routing based on your file structure. No more manual route configuration.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Server-side Rendering</h3>
+                    <p class="feature-description">Blazing fast initial page loads with server-side rendering and client-side hydration.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3 class="feature-title">Partial Hydration</h3>
+                    <p class="feature-description">Only hydrate interactive components, reducing JavaScript bundle size and improving performance.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">TypeScript Support</h3>
+                    <p class="feature-description">First-class TypeScript support with excellent type inference and autocompletion.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3 class="feature-title">Plugin System</h3>
+                    <p class="feature-description">Extensible plugin system for adding functionality like authentication, caching, and more.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Developer Experience</h3>
+                    <p class="feature-description">Built-in development server with hot reloading, error overlay, and more.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>10x</h3>
+                    <p>Faster Development</p>
+                </div>
+                <div class="stat-item">
+                    <h3>50%</h3>
+                    <p>Smaller Bundles</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p>Uptime</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>TypeScript</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section class="section" id="get-started">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started in Seconds</h2>
+                <p class="section-subtitle">Create your first Apex project with a single command</p>
+            </div>
+            
+            <div class="code-block">
+                <code>
+                    <span class="token comment"># Create a new Apex project</span><br>
+                    pnpm create apex-app@latest my-app<br><br>
+                    
+                    <span class="token comment"># Navigate to your project directory</span><br>
+                    cd my-app<br><br>
+                    
+                    <span class="token comment"># Start the development server</span><br>
+                    pnpm dev
+                </code>
+            </div>
+            
+            <div class="section-header" style="margin-top: 4rem;">
+                <h2 class="section-title">Why Choose Apex?</h2>
+                <p class="section-subtitle">Designed for modern web development</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">Performance First</h3>
+                    <p class="feature-description">Optimized for speed and efficiency with minimal JavaScript bundles and fast server-side rendering.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Developer Experience</h3>
+                    <p class="feature-description">Hot reloading, error boundaries, and excellent TypeScript support make development a joy.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Scalable Architecture</h3>
+                    <p class="feature-description">Built for applications that grow from prototype to production with ease.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="container">
+        <div class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Build Something Amazing?</h2>
+                <p class="cta-description">Join thousands of developers who are already building faster, more scalable web applications with Apex.</p>
+                <a href="https://github.com/Nom-nom-hub/Apex" class="cta-button">
+                    <i class="fab fa-github"></i> Get Started on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section class="section" id="examples">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Starter Templates</h2>
+                <p class="section-subtitle">Kickstart your project with these ready-to-use templates</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">Hello Apex</h3>
+                    <p class="feature-description">Basic starter template to get you up and running quickly.</p>
+                    <a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/hello-apex" class="secondary-button" style="margin-top: 1rem;">View Template</a>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Blog</h3>
+                    <p class="feature-description">Simple blog application with markdown support and static generation.</p>
+                    <a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/blog" class="secondary-button" style="margin-top: 1rem;">View Template</a>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">E-commerce</h3>
+                    <p class="feature-description">E-commerce starter template with product listings and cart functionality.</p>
+                    <a href="https://github.com/Nom-nom-hub/Apex/tree/master/examples/ecommerce-starter" class="secondary-button" style="margin-top: 1rem;">View Template</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-        <p>© <span id="year"></span> Apex Framework. All rights reserved.</p>
-        <p>
-            <a href="https://github.com/Nom-nom-hub/Apex">GitHub</a> | 
-            <a href="https://github.com/Nom-nom-hub/Apex/issues">Issues</a> | 
-            <a href="https://github.com/Nom-nom-hub/Apex/discussions">Discussions</a>
-        </p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>Apex Framework</h3>
+                    <p style="color: var(--gray); margin-bottom: 1rem;">A modern full-stack web framework for building scalable applications.</p>
+                    <a href="https://github.com/Nom-nom-hub/Apex" class="cta-button" style="background: white; color: var(--primary);">
+                        <i class="fab fa-github"></i> Star on GitHub
+                    </a>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                        <li><a href="https://github.com/Nom-nom-hub/Apex/issues">Issues</a></li>
+                        <li><a href="https://github.com/Nom-nom-hub/Apex/discussions">Discussions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/Nom-nom-hub/Apex">GitHub</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">License</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Apex Framework. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
-    
+
     <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
     </script>
 </body>
 </html>
