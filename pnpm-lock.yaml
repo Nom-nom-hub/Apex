@@ -308,7 +308,48 @@ importers:
         specifier: ^0.34.0
         version: 0.34.6(jsdom@26.1.0)
 
+  user-test:
+    dependencies:
+      '@apex-framework/core':
+        specifier: ^1.0.0
+        version: 1.0.0
+      '@apex-framework/renderer-react':
+        specifier: ^1.0.0
+        version: 1.0.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@apex-framework/cli':
+        specifier: ^1.0.0
+        version: 1.0.0
+      '@types/node':
+        specifier: ^24.3.0
+        version: 24.3.0
+      '@types/react':
+        specifier: ^18.3.24
+        version: 18.3.24
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
 packages:
+
+  '@apex-framework/cli@1.0.0':
+    resolution: {integrity: sha512-zsBI3SHK3WrI8VBJsDMDZJFHJ11WKfOykXY9M61oLRb9dOEYH9s1RoLPCe1nnhDScI3rpRTF6KkQbQfikFHXnw==}
+    hasBin: true
+
+  '@apex-framework/core@1.0.0':
+    resolution: {integrity: sha512-YYf80Nbct/dqruGkDY+G7euopsUiCAemKit/hmpOa52o9UvcNI1d21NZ9PzBo2d97cj+632LfZ+QgJeevc1x+Q==}
+
+  '@apex-framework/renderer-react@1.0.0':
+    resolution: {integrity: sha512-8/GtyuiHsUYXC/VsUhWc86jqM9iqxwxQ/UozagPeP3vY4uMKtqhve+xWo1uNsthYjbR/fBlY5A9aycvQ5NBMjA==}
+
+  '@apex-framework/runtime-node@1.0.0':
+    resolution: {integrity: sha512-VTbnXpOPgWKRkVEgsAH5eSo0wBL40jC0GEWAqQPi+bYiGgX3DyjI2yz/OZmfE3DV0KVBmkvuxi3OxnxVd5FCpA==}
 
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
@@ -2324,6 +2365,30 @@ packages:
 
 snapshots:
 
+  '@apex-framework/cli@1.0.0':
+    dependencies:
+      '@apex-framework/core': 1.0.0
+      '@apex-framework/runtime-node': 1.0.0
+      esbuild: 0.25.9
+
+  '@apex-framework/core@1.0.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/exporter-trace-otlp-http': 0.203.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 2.0.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 2.0.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.36.0
+
+  '@apex-framework/renderer-react@1.0.0':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@apex-framework/runtime-node@1.0.0':
+    dependencies:
+      '@apex-framework/core': 1.0.0
+      '@apex-framework/renderer-react': 1.0.0
+
   '@asamuzakjp/css-color@3.2.0':
     dependencies:
       '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
@@ -3950,7 +4015,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.19.123
+      '@types/node': 24.3.0
       long: 5.3.2
 
   public-encrypt@4.0.3:
